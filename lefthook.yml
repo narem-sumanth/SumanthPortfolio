@@ -1,0 +1,8 @@
+pre-commit:
+  jobs:
+    - name: lint
+      run: pnpm lint
+      glob: "*.{css,tsx,ts,json}"
+    - name: build
+      run: pnpm build
+      glob: "*.{css,tsx,ts,json}"
