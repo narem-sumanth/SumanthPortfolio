@@ -1,0 +1,23 @@
+# Build the Express API in isolation from the monorepo, keeping only what it needs at runtime.
+FROM node:22-slim AS base
+RUN corepack enable
+WORKDIR /repo
+
+FROM base AS builder
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY packages ./packages
+COPY apps/api ./apps/api
+COPY data ./data
+RUN pnpm install --frozen-lockfile --filter @portfolio/api...
+RUN pnpm --filter @portfolio/api build
+
+FROM base AS runner
+ENV NODE_ENV=production
+WORKDIR /repo
+COPY --from=builder /repo/node_modules ./node_modules
+COPY --from=builder /repo/packages ./packages
+COPY --from=builder /repo/data ./data
+COPY --from=builder /repo/apps/api ./apps/api
+WORKDIR /repo/apps/api
+EXPOSE 4000
+CMD ["node", "dist/index.js"]

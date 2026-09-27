@@ -1,0 +1,15 @@
+{
+  "name": "Sumanth Narem",
+  "role": "Software Engineer",
+  "tagline": "Building across full-stack, DevOps, cloud, and AI.",
+  "bio": "PLACEHOLDER BIO: replace with your real background. Sumanth is a software engineer who enjoys building end-to-end products: from infrastructure and deployment pipelines to full-stack applications and, more recently, AI-powered systems. This portfolio itself is one such project, an AI-first interface backed by verified, structured data instead of freeform hallucination.",
+  "location": "PLACEHOLDER: City, Country",
+  "availability": "Software Engineer, Rever",
+  "currentlyLearning": ["Retrieval-augmented generation", "Infrastructure as code at scale", "Applied LLM evaluation"],
+  "socials": [
+    { "label": "GitHub", "url": "https://github.com/narem-sumanth", "icon": "github" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/PLACEHOLDER", "icon": "linkedin" },
+    { "label": "Email", "url": "mailto:sumanth.narem@rever.ai", "icon": "mail" }
+  ],
+  "resumeUrl": "/resume.pdf"
+}

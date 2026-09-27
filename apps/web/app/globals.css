@@ -1,0 +1,71 @@
+@import "tailwindcss";
+@import "@portfolio/design-system/tokens.css";
+@import "@portfolio/design-system/theme.css";
+
+@source "../src";
+@source "../../../packages/ui/src";
+
+/* Global concerns only — component styling lives in Tailwind classes. */
+
+@layer base {
+  * {
+    border-color: rgb(var(--border));
+  }
+}
+
+body {
+  background-color: rgb(var(--surface-base));
+  color: rgb(var(--foreground));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: rgb(var(--accent) / 0.25);
+  color: rgb(var(--foreground));
+}
+
+* {
+  scrollbar-width: thin;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(var(--border-strong));
+  border-radius: 999px;
+  border: 2px solid rgb(var(--surface-base));
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

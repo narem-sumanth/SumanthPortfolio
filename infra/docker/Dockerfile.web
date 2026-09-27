@@ -1,0 +1,50 @@
+# Production image for apps/web, using Next.js "standalone" output so the
+# runtime image ships only the traced files it actually needs — not the full
+# monorepo node_modules. Measured with `docker run --rm <image> du -sh /`
+# (docker images/history can overstate size with attestation/provenance
+# layers — du on the real rootfs is the trustworthy number): ~160MB, down
+# from ~500MB when the runtime image carried the full monorepo node_modules.
+# https://nextjs.org/docs/pages/api-reference/next-config-js/output
+
+FROM node:22-alpine AS base
+
+# ---- deps + build -----------------------------------------------------
+FROM base AS builder
+RUN corepack enable
+WORKDIR /repo
+
+# Install first, isolated from source changes, so this layer stays cached
+# across rebuilds that only touch app code.
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY packages ./packages
+COPY apps/web ./apps/web
+RUN pnpm install --frozen-lockfile --filter @portfolio/web...
+
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+# next.config.mjs sets output: "standalone" + outputFileTracingRoot, so this
+# produces a self-contained server at apps/web/.next/standalone/apps/web/server.js
+RUN pnpm --filter @portfolio/web build
+
+# ---- runtime ------------------------------------------------------------
+# Nothing from the builder's node_modules is copied in — only the files Next
+# traced as actually required at runtime, plus static assets (excluded from
+# tracing by design, per Next.js docs). Runs plain `node`, never `pnpm`, so
+# npm/corepack/yarn (bundled in the base image, ~24MB) are stripped too.
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 nextjs \
+  && rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+    /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /opt/yarn-v*
+
+COPY --from=builder --chown=nextjs:nodejs /repo/apps/web/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /repo/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder --chown=nextjs:nodejs /repo/apps/web/public ./apps/web/public
+
+USER nextjs
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+EXPOSE 3000
+CMD ["node", "apps/web/server.js"]

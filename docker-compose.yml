@@ -1,0 +1,24 @@
+services:
+  api:
+    image: my-portfolio-api:local
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.api
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    environment:
+      - CORS_ORIGINS=http://localhost:3002
+
+  web:
+    image: my-portfolio-web:local
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.web
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:30004
+    ports:
+      - "3002:3000"
+    depends_on:
+      - api

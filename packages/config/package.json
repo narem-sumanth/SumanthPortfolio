@@ -1,0 +1,16 @@
+{
+  "name": "@portfolio/config",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js",
+  "files": [
+    "tsconfig.base.json",
+    "tsconfig.nextjs.json",
+    "tsconfig.node.json",
+    "env.ts",
+    "index.js"
+  ],
+  "dependencies": {
+    "zod": "^3.24.1"
+  }
+}

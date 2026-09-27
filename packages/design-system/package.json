@@ -1,0 +1,22 @@
+{
+  "name": "@portfolio/design-system",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/tokens.ts",
+  "types": "./src/tokens.ts",
+  "files": ["tokens.css", "theme.css", "src"],
+  "exports": {
+    "./tokens.css": "./tokens.css",
+    "./theme.css": "./theme.css",
+    ".": "./src/tokens.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings=0"
+  },
+  "devDependencies": {
+    "@portfolio/config": "workspace:*",
+    "@portfolio/eslint-config": "workspace:*",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,3 @@
+# Local overrides — never commit
+.env.secrets.local
+*.local.yaml

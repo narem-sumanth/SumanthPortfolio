@@ -1,0 +1,15 @@
+[
+  { "id": "skill-ts", "name": "TypeScript", "category": "language", "proficiency": "proficient" },
+  { "id": "skill-py", "name": "Python", "category": "language", "proficiency": "proficient" },
+  { "id": "skill-react", "name": "React", "category": "frontend", "relatedTo": ["skill-ts", "skill-node"], "proficiency": "expert" },
+  { "id": "skill-nextjs", "name": "Next.js", "category": "frontend", "relatedTo": ["skill-react"], "proficiency": "proficient" },
+  { "id": "skill-node", "name": "Node.js", "category": "backend", "relatedTo": ["skill-ts"], "proficiency": "expert" },
+  { "id": "skill-express", "name": "Express", "category": "backend", "relatedTo": ["skill-node"], "proficiency": "proficient" },
+  { "id": "skill-docker", "name": "Docker", "category": "devops", "relatedTo": ["skill-k8s"], "proficiency": "proficient" },
+  { "id": "skill-k8s", "name": "Kubernetes", "category": "devops", "relatedTo": ["skill-docker", "skill-terraform"], "proficiency": "familiar" },
+  { "id": "skill-terraform", "name": "Terraform", "category": "devops", "relatedTo": ["skill-aws"], "proficiency": "familiar" },
+  { "id": "skill-aws", "name": "AWS", "category": "cloud", "proficiency": "proficient" },
+  { "id": "skill-postgres", "name": "PostgreSQL", "category": "database", "proficiency": "proficient" },
+  { "id": "skill-llm", "name": "LLM Integration", "category": "ai", "relatedTo": ["skill-rag"], "proficiency": "proficient" },
+  { "id": "skill-rag", "name": "RAG", "category": "ai", "relatedTo": ["skill-llm"], "proficiency": "familiar" }
+]

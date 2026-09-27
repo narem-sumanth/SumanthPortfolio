@@ -1,0 +1,80 @@
+/*
+ * Design tokens — the single source of truth for color, radius and shadow
+ * across the product. Components consume these via Tailwind utility
+ * classes (see tailwind-preset.js), never by hardcoding hex values.
+ *
+ * Flat surface model — surfaces are told apart by fill and a 1px hairline
+ * border, never by drop shadows or embossed/inset bevels:
+ *   base      → page background
+ *   elevated  → section/panel background, one step up from base
+ *   raised    → cards, buttons at rest
+ *   inset     → recessed fills: inputs, wells
+ *   floating  → popovers, dropdowns, tooltips (soft ambient shadow only)
+ *   overlay   → modal/dialog backdrops and surfaces
+ */
+
+:root {
+  /* --font-geist-sans / --font-geist-mono are injected by next/font in apps/web/app/layout.tsx;
+     the --font-sans / --font-mono / --radius-* Tailwind theme values live in theme.css */
+
+  --surface-base: 255 255 255;
+  --surface-elevated: 255 255 255;
+  --surface-raised: 255 255 255;
+  --surface-inset: 248 248 246;
+  --surface-floating: 255 255 255;
+  --surface-overlay: 255 255 255;
+
+  --foreground: 23 23 22;
+  --foreground-muted: 96 96 92;
+  --foreground-subtle: 140 140 135;
+
+  --border: 224 224 220;
+  --border-strong: 200 200 195;
+
+  --accent: 121 70 254;
+  --accent-foreground: 255 255 255;
+  --accent-soft: 238 232 255;
+
+  --success: 22 163 74;
+  --warning: 217 119 6;
+  --danger: 220 38 38;
+
+  --shadow-color: 20 20 20;
+  --shadow-button-raw: 0 2px 6px 1px rgb(var(--shadow-color) / 0.07), 0 1px 3px 1px rgb(var(--shadow-color) / 0.05);
+  --shadow-floating-raw: 0 8px 24px rgb(var(--shadow-color) / 0.08), 0 1px 4px rgb(var(--shadow-color) / 0.04);
+  --shadow-overlay-raw: 0 20px 48px rgb(var(--shadow-color) / 0.14);
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"],
+:root.dark {
+  --surface-base: 24 27 34;
+  --surface-elevated: 30 33 40;
+  --surface-raised: 36 39 47;
+  --surface-inset: 20 23 30;
+  --surface-floating: 40 43 51;
+  --surface-overlay: 32 35 43;
+
+  --foreground: 237 237 235;
+  --foreground-muted: 168 168 164;
+  --foreground-subtle: 118 118 114;
+
+  --border: 44 44 46;
+  --border-strong: 62 62 64;
+
+  --accent: 148 107 254;
+  --accent-foreground: 12 12 13;
+  --accent-soft: 48 38 89;
+
+  --success: 74 222 128;
+  --warning: 251 191 36;
+  --danger: 248 113 113;
+
+  --shadow-color: 0 0 0;
+  --shadow-button-raw: 0 3px 12px 2px rgb(var(--shadow-color) / 0.28), 0 1px 4px 1px rgb(var(--shadow-color) / 0.18);
+  --shadow-floating-raw: 0 16px 40px rgb(var(--shadow-color) / 0.5), 0 2px 8px rgb(var(--shadow-color) / 0.35);
+  --shadow-overlay-raw: 0 24px 64px rgb(var(--shadow-color) / 0.65);
+
+  color-scheme: dark;
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "proj-portfolio-ai",
+    "name": "This Portfolio (AI Portfolio)",
+    "description": "An AI-first personal portfolio: a RAG-backed chat interface grounded in structured, version-controlled data, with a classic landing page as the alternate mode.",
+    "technologies": ["Next.js", "TypeScript", "Express", "Tailwind CSS", "NVIDIA Nemotron"],
+    "topics": ["ai", "rag", "nextjs", "typescript"],
+    "github": "https://github.com/narem-sumanth/SumanthPortfolio",
+    "featured": true
+  },
+  {
+    "id": "proj-placeholder-devops",
+    "name": "PLACEHOLDER: Infrastructure Automation Project",
+    "description": "PLACEHOLDER: replace with a real project. Describe what it automates and why it mattered.",
+    "technologies": ["Terraform", "Docker", "Kubernetes", "AWS"],
+    "topics": ["devops", "terraform", "kubernetes", "aws"],
+    "github": "https://github.com/narem-sumanth/PLACEHOLDER-devops-project",
+    "featured": true
+  },
+  {
+    "id": "proj-placeholder-webapp",
+    "name": "PLACEHOLDER: Full-Stack Web App",
+    "description": "PLACEHOLDER: replace with a real project. Describe the problem it solved.",
+    "technologies": ["React", "Node.js", "PostgreSQL"],
+    "topics": ["fullstack", "react", "node"],
+    "github": "https://github.com/narem-sumanth/PLACEHOLDER-webapp",
+    "live": "https://example.com"
+  }
+]
