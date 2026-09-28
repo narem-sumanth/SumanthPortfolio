@@ -1,9 +1,10 @@
 import type { Request, Response } from "express";
 import type { HealthResponse, ReadyResponse } from "@portfolio/types";
+import { env } from "../config/env";
 import { portfolioRepository } from "../repositories/portfolio.repository";
 
 export function getHealth(_req: Request, res: Response) {
-  const body: HealthResponse = { status: "ok", service: "api", timestamp: new Date().toISOString() };
+  const body: HealthResponse = { status: "ok", service: "api", timestamp: new Date().toISOString(), commit: env.COMMIT_SHA };
   res.json(body);
 }
 

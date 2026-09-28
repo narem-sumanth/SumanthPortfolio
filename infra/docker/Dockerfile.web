@@ -7,10 +7,10 @@
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
 
 FROM node:22-alpine AS base
+RUN corepack enable
 
 # ---- deps + build -----------------------------------------------------
 FROM base AS builder
-RUN corepack enable
 WORKDIR /repo
 
 # Install first, isolated from source changes, so this layer stays cached
@@ -18,7 +18,7 @@ WORKDIR /repo
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY packages ./packages
 COPY apps/web ./apps/web
-RUN pnpm install --frozen-lockfile --filter @portfolio/web...
+RUN pnpm install --frozen-lockfile --filter @portfolio/web... --ignore-scripts
 
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}

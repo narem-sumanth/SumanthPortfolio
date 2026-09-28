@@ -1,0 +1,53 @@
+# Git
+.git
+.gitignore
+
+# CI/CD
+.github
+.gitlab-ci.yml
+
+# Node
+node_modules
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Build outputs
+dist
+build
+.next
+out
+*.tsbuildinfo
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Test coverage
+coverage
+
+# Turbo
+.turbo
+
+# Logs
+logs
+*.log
+
+# Misc
+*.md
+!Dockerfile*
+!README.md
+docs/
+scripts/
+infra/

@@ -31,10 +31,7 @@ export function useChat() {
   const [activity, setActivity] = React.useState<ActivityStep[]>([]);
   const [isStreaming, setIsStreaming] = React.useState(false);
   const [isRestoring, setIsRestoring] = React.useState(true);
-  // Single source of truth for the source picker — the empty-state and
-  // active-conversation views each render their own <ChatInput>, so this
-  // must live here rather than inside ChatInput itself, or the user's
-  // selection silently resets to the default every time the view switches.
+  // ChatInput rendered in multiple views — source selection must live in hook to persist.
   const [sources, setSources] = React.useState<ChatSourceOption[]>(DEFAULT_SOURCES);
   const abortRef = React.useRef<(() => void) | null>(null);
   const hasStartedRef = React.useRef(false);
@@ -79,10 +76,7 @@ export function useChat() {
       }
       track("question_submitted", { length: text.length });
 
-      // Bounded to a recent window rather than the whole conversation: the backend only
-      // ever uses the last 6 turns for grounding anyway, and an ever-growing array would
-      // eventually exceed the request schema's history cap and hard-fail every message
-      // for the rest of the conversation.
+// Bounded to recent window — backend only uses last 6 turns; avoids schema cap.
       const history = messages.slice(-12).map((m) => ({ role: m.role, content: m.content }));
       const userMessage: ChatMessage = { id: uid(), role: "user", content: text };
       const assistantId = uid();

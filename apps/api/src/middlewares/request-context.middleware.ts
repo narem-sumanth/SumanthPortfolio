@@ -12,8 +12,7 @@ export const requestContext = pinoHttp({
   },
   customLogLevel: (_req, res, err) => (err || res.statusCode >= 500 ? "error" : res.statusCode >= 400 ? "warn" : "info"),
   autoLogging: { ignore: (req) => req.url === "/api/health" },
-  // Full req/res objects (headers, query, params, remoteAddress) are noise
-  // for every-request logging — keep only what's needed to read the line.
+  // Log only essentials — full req/res is noise.
   serializers: {
     req: (req) => ({ id: req.id, method: req.method, url: req.url }),
     res: (res) => ({ statusCode: res.statusCode }),

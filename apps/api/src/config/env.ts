@@ -2,9 +2,7 @@ import { config } from "dotenv";
 import { join } from "node:path";
 import { z } from "zod";
 
-// The repo root .env is the single source of truth for local config — see
-// .env.example. pnpm runs package scripts with cwd = the package directory,
-// so dotenv's own cwd-relative default would miss it.
+// Load .env from repo root (not package dir) so pnpm scripts find it.
 config({ path: join(__dirname, "../../../../.env") });
 
 /**
@@ -29,6 +27,8 @@ const envSchema = z.object({
   GOOGLE_SEARCH_ENGINE_ID: z.string().optional(),
 
   CONTACT_WEBHOOK_URL: z.string().url().optional().or(z.literal("")),
+
+  COMMIT_SHA: z.string().optional(),
 });
 
 export type Env = ReturnType<typeof loadEnv>;

@@ -30,11 +30,7 @@ export class NvidiaProvider implements LLMProvider {
         messages,
         stream: true,
         temperature: 0.4,
-        // Nemotron is a reasoning model — it spends tokens on internal
-        // reasoning before the final answer, so a low cap can exhaust the
-        // budget mid-thought and leave the visible answer empty (confirmed
-        // in production logs against nemotron-3-ultra-550b-a55b). NVIDIA's
-        // own API example for this model uses max_tokens=16384.
+// Nemotron reasons internally — low max_tokens leaves empty answer (NVIDIA uses 16384).
         max_tokens: 16384,
       }),
       signal: AbortSignal.timeout(30_000),
@@ -68,7 +64,7 @@ export class NvidiaProvider implements LLMProvider {
           const delta: string | undefined = parsed.choices?.[0]?.delta?.content;
           if (delta) yield delta;
         } catch {
-          // Skip malformed SSE frames rather than aborting the whole stream.
+          // Skip bad SSE frames instead of aborting stream.
         }
       }
     }

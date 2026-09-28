@@ -1,11 +1,8 @@
 "use client";
 
 /**
- * Persists the single active chat conversation in localStorage, encrypted
- * with AES-GCM via the Web Crypto API. The key lives in localStorage too
- * (client-side JS has no place to hide a secret), so this only prevents the
- * conversation from sitting as plaintext in the storage inspector — it is
- * not a confidentiality boundary against anyone with access to the page.
+ * Persists chat in localStorage, AES-GCM encrypted.
+ * Key in localStorage too — prevents plaintext in inspector, not a security boundary.
  */
 
 const STORAGE_KEY = "portfolio-chat:v1";
@@ -36,7 +33,7 @@ async function getOrCreateKey(): Promise<CryptoKey> {
   return key;
 }
 
-/** Encrypts `value` and writes it as the single stored conversation. Fails silently — storage is a convenience, never a requirement. */
+// Encrypts and stores single conversation — fails silently (convenience, not required).
 export async function saveChatHistory<T>(value: T): Promise<void> {
   try {
     const key = await getOrCreateKey();
@@ -45,11 +42,11 @@ export async function saveChatHistory<T>(value: T): Promise<void> {
     const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, plaintext);
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ iv: toBase64(iv), data: toBase64(ciphertext) }));
   } catch {
-    // Ignore — e.g. private browsing with storage disabled, or SubtleCrypto unavailable.
+    // Ignore — private browsing, no storage, or SubtleCrypto unavailable.
   }
 }
 
-/** Reads and decrypts the stored conversation, or null if there isn't one / it can't be read. */
+// Reads and decrypts stored conversation, or null if missing/unreadable.
 export async function loadChatHistory<T>(): Promise<T | null> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -67,11 +64,11 @@ export async function loadChatHistory<T>(): Promise<T | null> {
   }
 }
 
-/** Removes the stored conversation (used by the "Clear chat" action). */
+// Clears stored conversation (Clear chat action).
 export function clearChatHistory(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch {
-    // ignore
+    // Ignore — private browsing or no storage.
   }
 }

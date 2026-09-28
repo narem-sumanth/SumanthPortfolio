@@ -9,6 +9,7 @@ export interface HealthResponse {
   status: "ok";
   service: string;
   timestamp: string;
+  commit?: string;
 }
 
 export interface ReadyResponse {

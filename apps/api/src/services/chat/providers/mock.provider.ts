@@ -13,10 +13,7 @@ export class MockProvider implements LLMProvider {
     const system = messages.find((m) => m.role === "system")?.content ?? "";
     const userMessage = [...messages].reverse().find((m) => m.role === "user")?.content ?? "";
 
-    // Anchored to a line that is *only* the tag, since buildSystemPrompt always emits
-    // "<context>"/"</context>" as their own lines - matching the bare substring instead
-    // would grab the first incidental "<context>" mentioned in the rules' prose text
-    // (e.g. rule 1's "...isn't in <context> - a company name...") and swallow the rules.
+// Match only standalone <context> lines — avoids grabbing rules mentioning the word.
     const contextMatch = system.match(/^<context>$\n([\s\S]*?)\n^<\/context>$/m);
     const context = contextMatch?.[1]?.trim();
 
