@@ -31,8 +31,7 @@ function detectIntent(message: string): Intent {
     /\b(contact|reach out|touch|message)\b/.test(text)) {
     return "contact";
   }
-  // A short acknowledgment/greeting needs no retrieval — the model can reply
-  // from conversational continuity alone, so skip the search/fetch theater.
+  // Chitchat needs no retrieval — model replies from context alone.
   if (/^(ok(ay)?|k+|thanks?( you)?|thx|cool|nice|great|got it|sure|alright|yep|yes|no|hi|hello|hey|sounds good)[.!?]*$/.test(text)) {
     return "chitchat";
   }
@@ -45,9 +44,7 @@ function detectIntent(message: string): Intent {
   return "general";
 }
 
-// A few honest, varied phrasings per stage — picked at random each turn so
-// the ticker doesn't read identically every time. Each is only emitted right
-// before the real work it describes actually starts, never on a timer.
+// Randomized per-turn so ticker doesn't read identically every time.
 const QUESTION_EXTRACTOR_LABELS = ["Understanding your question", "Reading your message", "Parsing what you're asking"];
 const PREPARING_RESPONSE_LABELS = ["Preparing your answer", "Putting the response together", "Finalizing the answer"];
 
@@ -101,10 +98,7 @@ export async function runChatPipeline(request: PipelineRequest, emit: (event: Pi
   const useGoogle = selectedSources.includes("google");
   const useGithub = selectedSources.includes("github");
 
-  // Every status below is emitted immediately before the real work it names -
-  // never on a fixed timer, and never for a stage that isn't actually happening
-  // (e.g. no "searching" status when an intent only needs a direct, synchronous
-  // portfolio lookup with nothing to search).
+  // Emitted right before real work starts — never on timer, never for skipped stages.
   emit({ type: "status", label: pick(QUESTION_EXTRACTOR_LABELS) });
 
   if (intent === "contact") {
@@ -122,16 +116,14 @@ export async function runChatPipeline(request: PipelineRequest, emit: (event: Pi
 
   try {
     if (intent === "chitchat") {
-      // Nothing to search - reply from conversational continuity alone.
+      // Chitchat — reply from context, no search needed.
     } else if (intent === "github") {
       if (useGithub) {
         emit({ type: "status", label: findingSourcesLabel(["github"]) });
         documents = (await searchGitHub(request.message)).documents;
       }
     } else if (intent === "project") {
-      // Pull the full verified project list directly (like experience/skills below) rather
-      // than relying on fuzzy keyword search, which can miss real projects entirely on a
-      // plural/singular mismatch (e.g. "projects" never matching a doc titled "Project").
+// Direct lookup avoids fuzzy misses (e.g., "projects" vs "Project").
       const projectDocs: RetrievedDocument[] = usePortfolio
         ? getProjects().map((p) => ({
             id: `project-${p.id}`,
@@ -195,11 +187,7 @@ export async function runChatPipeline(request: PipelineRequest, emit: (event: Pi
 
   let answer = "";
   try {
-    // A reasoning model can occasionally spend its whole token budget on internal
-    // reasoning and come back with zero visible content. When that happens nothing
-    // has been shown to the visitor yet (no tokens were emitted), so silently
-    // retrying once is safe and invisible - far better than surfacing a dead-end
-    // "please try asking again" that makes the visitor do the retry by hand.
+// Reasoning model may spend budget on internal thoughts — silent retry avoids blank bubble.
     const MAX_ATTEMPTS = 2;
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
       let attemptAnswer = "";
@@ -221,20 +209,16 @@ export async function runChatPipeline(request: PipelineRequest, emit: (event: Pi
     return;
   }
 
-  // A placeholder entry is a stub, not verified grounding data — the model may still see it
-  // in <context> (so it can honestly say "not filled in yet"), but it shouldn't be cited as
-  // a source, since nothing real was actually drawn from it.
+  // Placeholders aren't real sources — shown in context but not cited.
   const citableDocuments = documents.filter((doc) => !doc.title.toUpperCase().includes("PLACEHOLDER"));
   const sources = dedupeSources(citableDocuments.map(toSourceReference));
 
-  // A reasoning model can occasionally exhaust its token budget on internal
-  // reasoning and emit no visible content — never surface a blank bubble.
+  // Model may emit no visible tokens — never surface blank bubble.
   const trimmedAnswer = answer.trim().length > 0
     ? answer
     : "Sorry, I wasn't able to put together an answer that time - please try asking again.";
 
-  // The model doesn't always obey the "no em dash" style rule (rule 11) — enforce it
-  // deterministically rather than relying on the prompt alone.
+  // Model ignores "no em dash" rule — enforce locally.
   const finalAnswer = trimmedAnswer.replace(/—/g, "-");
 
   // Extract AI-generated follow-up suggestions

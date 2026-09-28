@@ -8,7 +8,9 @@ COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY packages ./packages
 COPY apps/api ./apps/api
 COPY data ./data
-RUN pnpm install --frozen-lockfile --filter @portfolio/api...
+RUN pnpm install --frozen-lockfile --filter @portfolio/api... --ignore-scripts
+ARG COMMIT_SHA
+ENV COMMIT_SHA=${COMMIT_SHA}
 RUN pnpm --filter @portfolio/api build
 
 FROM base AS runner

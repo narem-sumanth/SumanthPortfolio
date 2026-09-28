@@ -5,11 +5,7 @@ import { logger } from "../utils/logger";
 
 const chatRequestSchema = z.object({
   message: z.string().trim().min(1).max(2000),
-  // The pipeline only ever grounds on the last 6 turns (see chat-pipeline.service.ts), and
-  // the frontend now windows what it sends to the last 12 - this cap is just a defense-in-
-  // depth ceiling against an abusive payload, not something a normal conversation should
-  // ever approach. It must stay comfortably above what the frontend actually sends, or every
-  // message in a long-running conversation starts hard-failing even though it's perfectly valid.
+  // Cap is a defense ceiling — pipeline uses last 6 turns, frontend sends last 12.
   history: z
     .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().max(4000) }))
     .max(100)
