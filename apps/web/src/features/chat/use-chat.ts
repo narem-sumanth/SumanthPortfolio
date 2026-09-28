@@ -3,7 +3,7 @@
 import * as React from "react";
 import type { ChatAction, ChatSourceOption, ChatStreamEvent, SourceReference } from "@portfolio/types";
 import type { ActivityStep } from "@portfolio/ui";
-import { apiClient } from "@/lib/apiClient";
+import { useApiClient } from "@/components/api-provider";
 import { track } from "@/lib/analytics";
 import { clearChatHistory, loadChatHistory, saveChatHistory } from "@/lib/chatStorage";
 
@@ -27,6 +27,7 @@ function uid() {
 const DEFAULT_SOURCES: ChatSourceOption[] = ["portfolio", "github"];
 
 export function useChat() {
+  const apiClient = useApiClient();
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
   const [activity, setActivity] = React.useState<ActivityStep[]>([]);
   const [isStreaming, setIsStreaming] = React.useState(false);

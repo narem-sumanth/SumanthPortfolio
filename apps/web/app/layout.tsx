@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@portfolio/ui";
 import { AppChrome } from "@/components/app-chrome";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ApiProvider } from "@/components/api-provider";
 import { getProfileSafe } from "@/lib/serverApi";
 import "./globals.css";
 
@@ -47,11 +48,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body>
-        <ThemeProvider>
-          <TooltipProvider delayDuration={200}>
-            <AppChrome profile={profile}>{children}</AppChrome>
-          </TooltipProvider>
-        </ThemeProvider>
+        <ApiProvider baseUrl={process.env.API_URL ?? ""}>
+          <ThemeProvider>
+            <TooltipProvider delayDuration={200}>
+              <AppChrome profile={profile}>{children}</AppChrome>
+            </TooltipProvider>
+          </ThemeProvider>
+        </ApiProvider>
       </body>
     </html>
   );
