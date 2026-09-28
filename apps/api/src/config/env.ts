@@ -2,7 +2,6 @@ import { config } from "dotenv";
 import { join } from "node:path";
 import { z } from "zod";
 
-// Load .env from repo root (not package dir) so pnpm scripts find it.
 config({ path: join(__dirname, "../../../../.env") });
 
 /**

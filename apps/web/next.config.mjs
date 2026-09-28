@@ -3,6 +3,10 @@ import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Load env vars from monorepo root — same role as env.ts in apps/api.
+// process.loadEnvFile is Node 20+ built-in, no dotenv dependency needed.
+process.loadEnvFile(path.join(__dirname, "../../.env"));
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
