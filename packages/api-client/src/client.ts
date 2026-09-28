@@ -19,7 +19,7 @@ export interface PortfolioApiClientOptions {
 /**
  * Thin typed client over the API contract in packages/types. Deliberately
  * unaware of which backend implementation is serving requests — only the
- * base URL differs between environments (NEXT_PUBLIC_API_URL).
+ * base URL differs between environments.
  */
 export function createApiClient({ baseUrl }: PortfolioApiClientOptions) {
   const url = (path: string) => `${baseUrl.replace(/\/$/, "")}${path}`;

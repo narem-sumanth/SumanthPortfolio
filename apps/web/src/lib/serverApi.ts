@@ -1,14 +1,13 @@
+import { createApiClient } from "@portfolio/api-client";
 import type { Profile } from "@portfolio/types";
-import { apiClient } from "./apiClient";
 
-/**
- * Server-side data fetching with a safe fallback — if the API is briefly
- * unavailable during a build or request, pages still render instead of
- * throwing, matching the "never show an ugly error" UX principle.
- */
+function getClient() {
+  return createApiClient({ baseUrl: process.env.API_URL ?? "" });
+}
+
 export async function getProfileSafe(): Promise<Profile | null> {
   try {
-    return await apiClient.getProfile();
+    return await getClient().getProfile();
   } catch {
     return null;
   }
