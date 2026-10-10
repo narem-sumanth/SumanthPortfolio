@@ -44,6 +44,7 @@ export function MessageBubble({ role, children, sources, className, errored }: M
   return (
     <div className={cn("flex w-full", isUser ? "justify-end" : "justify-start", className)}>
       <div
+        data-testid={isUser ? "chat-message-user" : "chat-message-assistant"}
         className={cn(
           "relative rounded-lg px-4 py-3 text-sm leading-relaxed animate-slide-up",
           isUser

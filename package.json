@@ -13,11 +13,13 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "test:e2e": "playwright test",
     "ingest": "pnpm --filter @portfolio/api ingest",
     "clean": "turbo run clean && rm -rf node_modules",
     "prepare": "lefthook install"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.0",
     "eslint": "^9.18.0",
     "lefthook": "^2.1.14",
     "prettier": "^3.4.2",

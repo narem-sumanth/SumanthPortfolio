@@ -8,7 +8,7 @@ This file provides mandatory instructions for any AI agent working on this codeb
 2. **Follow existing conventions** — Mimic code style, naming, imports, and patterns already in the codebase.
 3. **Minimal changes** — Make the smallest change necessary. Don't refactor unrelated code.
 4. **Verify after changes** — Run `pnpm lint`, `pnpm typecheck`, and `pnpm test` after modifications.
-5. **Never read `.env` files** — Agents are blocked from reading environment files. Use `.env.example` as reference only. All env vars validated at boot via Zod (`apps/api/src/config/env.ts`).
+5. **Never read `.env` files** — Agents are blocked from reading environment files. Use the per-app `.env.example` (`apps/api/.env.example`, `apps/web/.env.example`) as reference only. All env vars validated at boot via Zod (`apps/api/src/config/env.ts`).
 
 ## Design Principles
 
@@ -546,8 +546,9 @@ If you change the system prompt's follow-up instructions, update `extractFollowU
 # 1. Install dependencies
 pnpm install
 
-# 2. Copy env template — no API keys required for local dev
-cp .env.example .env
+# 2. Copy env templates — no API keys required for local dev
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env.local
 
 # 3. Start all services (API :4000, Web :3000)
 pnpm dev
@@ -568,10 +569,10 @@ Use this table when a problem statement arrives — go directly to the right fil
 | Wrong/missing chat answer | `apps/api/src/services/chat/system-prompt.ts`, `data/` JSON files |
 | LLM provider failing | `apps/api/src/services/chat/providers/fallback.provider.ts`, `apps/api/src/services/chat/providers/nvidia.provider.ts` |
 | Contact form not submitting | `apps/api/src/services/contact/contact.service.ts`, `apps/api/src/services/contact/contact.validation.ts` |
-| Contact webhook not firing | `apps/api/src/services/contact/contact.webhook.ts`, `.env` `CONTACT_WEBHOOK_URL` |
+| Contact webhook not firing | `apps/api/src/services/contact/contact.webhook.ts`, `apps/api/.env` `CONTACT_WEBHOOK_URL` |
 | Portfolio data missing/stale | `data/` JSON files, `apps/api/src/repositories/portfolio.repository.ts` |
 | GitHub projects not showing | `data/generated/github-cache.json`, `apps/api/src/services/retrieval/github.source.ts` |
-| Web search not working | `apps/api/src/services/retrieval/google-search.source.ts`, `.env` `GOOGLE_SEARCH_*` |
+| Web search not working | `apps/api/src/services/retrieval/google-search.source.ts`, `apps/api/.env` `GOOGLE_SEARCH_*` |
 | CORS error in browser | `apps/api/src/middlewares/cors.middleware.ts`, `CORS_ORIGINS` env var |
 | Rate-limit 429 errors | `apps/api/src/middlewares/rate-limit.middleware.ts` |
 | Type error after data change | `packages/types/src/domain.ts` — update type first, then `data/*.json` |
