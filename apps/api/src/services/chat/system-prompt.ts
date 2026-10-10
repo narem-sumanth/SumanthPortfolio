@@ -117,8 +117,14 @@ export function buildSystemPrompt(profile: Profile, contextBlock: string, select
   );
 
   lines.push(
-    "13. At the end of your response, include 2-3 natural follow-up questions the visitor might want to ask next, " +
-      "based on what you just discussed. Format them as a JSON array on a single line: " +
+    "13. At the end of your response, include 2-3 natural follow-up questions, based on what you just discussed. " +
+      "Clicking one fills the visitor's own chat input verbatim, so each one must read exactly like a message the " +
+      "VISITOR would type to you next - the same voice as their very first message (e.g. \"Tell me about your " +
+      "experience\"). That means addressing " + profile.name + " as \"your\"/\"you\" in these questions (e.g. " +
+      "\"What about your education?\", \"Can you tell me about your skills?\") - this is the opposite of rule 12, " +
+      "which governs your own prose, not text the visitor is about to send. Never write third-person narration " +
+      "about the visitor or " + profile.name + " here (never \"Would you like to know about their education?\" and " +
+      "never \"What about their education?\"). Format them as a JSON array on a single line: " +
       "__FOLLOWUPS__[\"question 1\", \"question 2\", \"question 3\"]"
   );
 
