@@ -37,6 +37,14 @@ Thumbs.db
 # Test coverage
 coverage
 
+# E2E tests
+e2e
+playwright.config.ts
+playwright-report
+blob-report
+test-results
+.cache/playwright
+
 # Turbo
 .turbo
 

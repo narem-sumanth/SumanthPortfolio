@@ -10,8 +10,9 @@ An intelligent portfolio where the **AI chat is the primary interface**. Ask abo
 # Install dependencies (uses pnpm@11.20.0 via packageManager)
 pnpm install
 
-# Copy env template — all vars have safe fallbacks
-cp .env.example .env
+# Copy env templates — all vars have safe fallbacks
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env.local
 
 # Start both apps: Next.js web (:3000) + Express API (:4000)
 pnpm dev

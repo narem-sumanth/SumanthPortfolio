@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { join } from "node:path";
 import { z } from "zod";
 
-config({ path: join(__dirname, "../../../../.env") });
+config({ path: join(__dirname, "../../.env") });
 
 /**
  * Validated at process startup — fails fast with a readable message instead

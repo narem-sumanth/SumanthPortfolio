@@ -18,7 +18,7 @@ optional on-disk fallback is read-only at request time).
 
 - Build command: `pnpm --filter @portfolio/api build`.
 - Start command: `pnpm --filter @portfolio/api start`.
-- Required env: see `.env.example`. At minimum, set `CORS_ORIGINS` to the
+- Required env: see `apps/api/.env.example`. At minimum, set `CORS_ORIGINS` to the
   deployed frontend's origin.
 - Optional: run `pnpm ingest` in CI before deploy to pre-warm
   `data/generated/github-cache.json`, so a GitHub API outage or rate limit at
