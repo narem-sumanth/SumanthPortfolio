@@ -9,21 +9,20 @@
     "featured": true
   },
   {
-    "id": "proj-placeholder-devops",
-    "name": "PLACEHOLDER: Infrastructure Automation Project",
-    "description": "PLACEHOLDER: replace with a real project. Describe what it automates and why it mattered.",
-    "technologies": ["Terraform", "Docker", "Kubernetes", "AWS"],
-    "topics": ["devops", "terraform", "kubernetes", "aws"],
-    "github": "https://github.com/narem-sumanth/PLACEHOLDER-devops-project",
+    "id": "proj-infant-health-risk",
+    "name": "InfantHealthRisk",
+    "description": "A FastAPI-based ML backend for early risk detection in newborns in neonatal intensive care. Uses a CatBoost model with JWT authentication and MongoDB storage to classify overall, cardiac, respiratory, and jaundice risk as Low/Medium/High, intended as clinical decision support rather than a diagnostic tool.",
+    "technologies": ["Python", "FastAPI", "CatBoost", "MongoDB", "JWT"],
+    "topics": ["python", "fastapi", "machine-learning", "healthcare"],
+    "github": "https://github.com/narem-sumanth/InfantHealthRisk",
     "featured": true
   },
   {
-    "id": "proj-placeholder-webapp",
-    "name": "PLACEHOLDER: Full-Stack Web App",
-    "description": "PLACEHOLDER: replace with a real project. Describe the problem it solved.",
-    "technologies": ["React", "Node.js", "PostgreSQL"],
-    "topics": ["fullstack", "react", "node"],
-    "github": "https://github.com/narem-sumanth/PLACEHOLDER-webapp",
-    "live": "https://example.com"
+    "id": "proj-bird-species",
+    "name": "Bird Species Recognition",
+    "description": "Bird species recognition from audio recordings: trains a classifier on labeled bird sound clips and supports prediction from an audio file or live from a microphone.",
+    "technologies": ["Python"],
+    "topics": ["python", "audio", "machine-learning"],
+    "github": "https://github.com/narem-sumanth/birdSpecies"
   }
 ]

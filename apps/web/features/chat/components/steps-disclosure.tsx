@@ -12,8 +12,11 @@ export interface StepsDisclosureProps {
 
 /**
  * A collapsed step summary - no border or background while just sitting
- * there - that only gains a border and a subtle background once the visitor
- * clicks it open to reveal the full step checklist.
+ * there - that only gains a thin connecting rule (the same timeline-rail
+ * language used elsewhere in the app) once the visitor clicks it open to
+ * reveal the full step checklist. Deliberately not a bordered/filled card:
+ * that read as a heavy, disconnected box rather than part of the same
+ * thread of thought.
  */
 export function StepsDisclosure({ steps, label }: StepsDisclosureProps) {
   const [expanded, setExpanded] = React.useState(false);
@@ -30,7 +33,7 @@ export function StepsDisclosure({ steps, label }: StepsDisclosureProps) {
         <ChevronRight className={cn("h-3 w-3 shrink-0 transition-transform", expanded && "rotate-90")} />
       </button>
       {expanded && (
-        <div className="rounded-lg border border-border/70 bg-inset px-4 py-3">
+        <div className="animate-fade-in ml-1 border-l border-border py-0.5 pl-3.5">
           <ActivityIndicator steps={steps} />
         </div>
       )}

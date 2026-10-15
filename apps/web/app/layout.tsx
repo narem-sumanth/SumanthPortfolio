@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@portfolio/ui";
-import { AppChrome } from "@/components/app-chrome";
-import { ThemeProvider } from "@/components/theme-provider";
-import { ApiProvider } from "@/components/api-provider";
-import { getProfileSafe } from "@/lib/serverApi";
+import { AppChrome, ThemeProvider, ApiProvider } from "@/features/shell";
+import { getProfileSafe } from "@/features/portfolio";
 import "./globals.css";
 
 const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans", display: "swap" });

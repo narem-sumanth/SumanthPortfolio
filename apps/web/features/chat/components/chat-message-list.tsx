@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Trash2 } from "lucide-react";
-import { Button, MessageBubble, type ActivityStep } from "@portfolio/ui";
-import type { ChatMessage } from "./use-chat";
+import { Briefcase, Trash2 } from "lucide-react";
+import { Button, ExperienceTimeline, MessageBubble, type ActivityStep } from "@portfolio/ui";
+import type { ChatMessage } from "../lib/use-chat";
 import { ContactFlow } from "./contact-flow";
 import { LiveStepTicker } from "./live-step-ticker";
 import { StepsDisclosure } from "./steps-disclosure";
@@ -18,9 +18,13 @@ export interface ChatMessageListProps {
 
 export function ChatMessageList({ messages, activity, onSuggestionSelect, onClearChat }: ChatMessageListProps) {
   const endRef = React.useRef<HTMLDivElement>(null);
+  const hasScrolledOnceRef = React.useRef(false);
 
   React.useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    // First paint (e.g. restoring history on panel open) should land at the
+    // bottom instantly — only scroll-animate for messages that arrive after.
+    endRef.current?.scrollIntoView({ behavior: hasScrolledOnceRef.current ? "smooth" : "auto", block: "end" });
+    hasScrolledOnceRef.current = true;
   }, [messages, activity]);
 
   return (
@@ -43,7 +47,21 @@ export function ChatMessageList({ messages, activity, onSuggestionSelect, onClea
                     label={`Worked through ${message.steps.length} step${message.steps.length === 1 ? "" : "s"}`}
                   />
                 )}
-                <MessageBubble role={message.role} sources={message.sources} errored={message.errored}>
+                <MessageBubble
+                  role={message.role}
+                  sources={message.sources}
+                  errored={message.errored}
+                  widget={
+                    message.widget?.type === "experience_timeline" ? (
+                      <div className="flex flex-col gap-2">
+                        <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-foreground-subtle">
+                          <Briefcase className="h-3 w-3" /> Experience
+                        </span>
+                        <ExperienceTimeline entries={message.widget.entries} compact />
+                      </div>
+                    ) : undefined
+                  }
+                >
                   {message.content}
                 </MessageBubble>
               </>

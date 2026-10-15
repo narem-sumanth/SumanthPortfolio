@@ -78,43 +78,56 @@ SumanthPortfolio/
 │   │   ├── package.json
 │   │   └── tsconfig.json
 │   │
-│   └── web/                       # Next.js 14 (App Router) Frontend
-│       ├── src/
-│       │   ├── app/              # App Router pages
-│       │   │   ├── layout.tsx
-│       │   │   ├── page.tsx          # Chat UI (home)
-│       │   │   ├── portfolio/page.tsx
-│       │   │   ├── robots.ts
-│       │   │   └── sitemap.ts
-│       │   ├── components/       # Shared UI components
-│       │   │   ├── app-chrome.tsx
-│       │   │   ├── command-palette-provider.tsx
-│       │   │   ├── mode-switcher.tsx
-│       │   │   ├── theme-provider.tsx
-│       │   │   └── theme-toggle.tsx
-│       │   ├── features/         # Feature-based components
-│       │   │   └── chat/
-│       │   │       ├── chat-input.tsx
-│       │   │       ├── chat-message-list.tsx
-│       │   │       ├── chat-view.tsx
-│       │   │       ├── contact-flow.tsx
-│       │   │       ├── live-step-ticker.tsx
-│       │   │       ├── source-picker.tsx
-│       │   │       ├── steps-disclosure.tsx
-│       │   │       ├── suggested-questions.tsx
-│       │   │       └── use-chat.ts
-│       │   └── lib/              # Client-side utilities
-│       │       ├── analytics.ts
-│       │       ├── apiClient.ts        # Typed API client (packages/api-client)
-│       │       ├── chatStorage.ts
-│       │       └── serverApi.ts
-│       ├── tests/                # Vitest + React Testing Library
+│   └── web/                       # Next.js (App Router) Frontend — no `src/`, feature-sliced
+│       ├── app/                   # Routing ONLY — no components/, no lib/, nothing else
+│       │   ├── layout.tsx
+│       │   ├── page.tsx           # Portfolio (home) — the only route
+│       │   ├── robots.ts
+│       │   ├── sitemap.ts
+│       │   └── globals.css
+│       ├── features/              # Every feature owns its own components/ + lib/ + index.ts.
+│       │   │                      # Import a feature ONLY via its index.ts barrel — never reach
+│       │   │                      # into another feature's components/ or lib/ directly
+│       │   │                      # (enforced by the `no-restricted-imports` rule in eslint.config.js).
+│       │   ├── shell/             # App-wide chrome + infra (header, theme, command palette,
+│       │   │   ├── index.ts       # typed API client, analytics) — not a route, not domain content
+│       │   │   ├── components/
+│       │   │   │   ├── app-chrome.tsx
+│       │   │   │   ├── api-provider.tsx
+│       │   │   │   ├── command-palette-provider.tsx
+│       │   │   │   ├── theme-provider.tsx
+│       │   │   │   └── theme-toggle.tsx
+│       │   │   └── lib/
+│       │   │       └── analytics.ts
+│       │   ├── portfolio/         # Safe fetchers for the portfolio dataset (apps/api)
+│       │   │   ├── index.ts
+│       │   │   └── lib/
+│       │   │       └── serverApi.ts
+│       │   └── chat/              # AI chat — a slide-over side panel, not a route
+│       │       ├── index.ts
+│       │       ├── components/
+│       │       │   ├── chat-panel-provider.tsx  # Side-panel open/close context
+│       │       │   ├── chat-fab.tsx             # Floating action button trigger
+│       │       │   ├── ask-ai-button.tsx        # Inline "Ask AI" trigger
+│       │       │   ├── chat-side-panel.tsx      # Slide-over panel shell
+│       │       │   ├── chat-input.tsx
+│       │       │   ├── chat-message-list.tsx
+│       │       │   ├── chat-view.tsx
+│       │       │   ├── contact-flow.tsx
+│       │       │   ├── live-step-ticker.tsx
+│       │       │   ├── source-picker.tsx
+│       │       │   ├── steps-disclosure.tsx
+│       │       │   └── suggested-questions.tsx
+│       │       └── lib/
+│       │           ├── use-chat.ts     # SSE hook + state
+│       │           └── chatStorage.ts  # LocalStorage persistence
+│       ├── tests/                 # Vitest + React Testing Library
 │       │   ├── setup.ts
 │       │   ├── chat-input.test.tsx
 │       │   └── suggested-questions.test.tsx
 │       ├── package.json
 │       ├── tsconfig.json
-│       └── next.config.js
+│       └── next.config.mjs
 │
 ├── packages/
 │   ├── types/                   # Shared domain types (SOURCE OF TRUTH)
@@ -141,11 +154,12 @@ SumanthPortfolio/
 │   │   │   │   ├── command-palette.tsx
 │   │   │   │   ├── contact-card.tsx
 │   │   │   │   ├── dialog.tsx
+│   │   │   │   ├── experience-timeline.tsx
 │   │   │   │   ├── input.tsx
 │   │   │   │   ├── message-bubble.tsx
-│   │   │   │   ├── navigation-rail.tsx
 │   │   │   │   ├── popover.tsx
 │   │   │   │   ├── project-card.tsx
+│   │   │   │   ├── sheet.tsx
 │   │   │   │   ├── source-chip.tsx
 │   │   │   │   └── tooltip.tsx
 │   │   │   ├── lib/
@@ -294,44 +308,16 @@ src/
     └── logger.ts               # Structured logging (pino)
 ```
 
-## Frontend Folder Structure (`apps/web/src/`)
+## Frontend Folder Structure (`apps/web/`)
 
-```
-src/
-├── app/                        # Next.js App Router
-│   ├── layout.tsx              # Root layout, providers
-│   ├── page.tsx                # Chat interface (home)
-│   ├── portfolio/
-│   │   └── page.tsx            # Portfolio page
-│   ├── robots.ts               # robots.txt generation
-│   └── sitemap.ts              # sitemap.xml generation
-├── components/                 # Shared/layout components
-│   ├── app-chrome.tsx          # App shell, navigation
-│   ├── command-palette-provider.tsx
-│   ├── mode-switcher.tsx       # Chat/Portfolio toggle
-│   ├── theme-provider.tsx      # Theme context
-│   └── theme-toggle.tsx        # Dark/light toggle
-├── features/                   # Feature-based components (colocated)
-│   └── chat/
-│       ├── chat-input.tsx      # Message input with attachments
-│       ├── chat-message-list.tsx
-│       ├── chat-view.tsx       # Main chat container
-│       ├── contact-flow.tsx    # Contact form modal
-│       ├── live-step-ticker.tsx # Streaming step indicator
-│       ├── source-picker.tsx   # Source selection UI
-│       ├── steps-disclosure.tsx # Expandable reasoning steps
-│       ├── suggested-questions.tsx
-│       └── use-chat.ts         # Chat hook (SSE + state)
-├── lib/                        # Client utilities
-│   ├── analytics.ts            # Event tracking
-│   ├── apiClient.ts            # Typed client (packages/api-client)
-│   ├── chatStorage.ts          # LocalStorage persistence
-│   └── serverApi.ts            # Server-side API calls
-└── tests/                      # Vitest + RTL tests
-    ├── setup.ts
-    ├── chat-input.test.tsx
-    └── suggested-questions.test.tsx
-```
+See the `web/` tree under **Complete Repository Structure** above for the full file list. The rules that tree encodes:
+
+- No `src/` — `app/`, `features/`, and `tests/` sit directly under `apps/web/`.
+- `app/` is routing only (`layout.tsx`, `page.tsx`, `robots.ts`, `sitemap.ts`, `globals.css`) — **never** add a `components/` or `lib/` folder under `app/`.
+- Every feature under `features/<name>/` owns its own `components/` and/or `lib/`, plus one `index.ts` barrel that is its public API.
+- **Cross-feature and app-level imports must go through the barrel** — `import { X } from "@/features/chat"`, never `@/features/chat/components/x`. `eslint.config.js` enforces this with `no-restricted-imports`; a deep import is a lint error, not a style nit.
+- Within a feature, files import each other with relative paths (`./chat-fab`, `../lib/use-chat`) — the barrel rule only applies across a feature boundary.
+- Current features: `shell` (app-wide chrome + infra: header, theme, command palette, the typed API client, analytics — not a route, not domain content), `portfolio` (safe fetchers for the portfolio dataset), `chat` (the AI chat side panel).
 
 ## Shared Packages Detail
 
@@ -374,11 +360,12 @@ src/
 - **Never read `.env` directly** — use `config/env.ts` validated config object
 
 ### Web Layer (`apps/web/`)
-- App Router only — no Pages Router
-- Components in `src/components/` — prefer server components
-- Client components marked with `'use client'` — minimize these
+- App Router only — no Pages Router, no `src/`
+- `app/` is routing ONLY — never add a `components/` or `lib/` folder under `app/`
+- Prefer server components; client components marked with `'use client'` — minimize these
 - API calls via `packages/api-client` — never raw `fetch`
-- Feature components in `src/features/` — colocalized by feature
+- All components and utilities live inside `features/<feature>/components/` and `features/<feature>/lib/` — every feature owns both; app-wide infra (chrome, theme, API client, analytics) lives in the `shell` feature, not a generic top-level `components/`/`lib/`
+- Import a feature only via its `index.ts` barrel (`@/features/<name>`) — never deep-import `@/features/<name>/components/...` or `.../lib/...` from outside that feature; enforced by `no-restricted-imports` in `apps/web/eslint.config.js`
 
 ### Shared Packages (`packages/`)
 - **`types` is the source of truth** — all domain types defined here
@@ -399,7 +386,7 @@ src/
 | Commit secrets (`.env`, API keys) | Use `.env.example` as template |
 | **Read `.env` files** | **Blocked — use validated config from `env.ts`** |
 | Import types from anywhere but `packages/types` | Single source of truth |
-| Create components outside `packages/ui` or `apps/web/src/features` | Consistency |
+| Create components outside `packages/ui` or `apps/web/features` | Consistency |
 
 ## Required Commands After Changes
 
@@ -433,7 +420,7 @@ pnpm build      # Production build verification
 1. Create in `packages/ui/src/components/`
 2. Use design tokens from `packages/design-system/`
 3. Export from `packages/ui/src/index.ts`
-4. Use in `apps/web/src/components/` or `apps/web/src/features/`
+4. Use in `apps/web/features/shell/components/` (app-shell) or `apps/web/features/<feature>/components/` (feature-owned), and export it from that feature's `index.ts` if anything outside the feature needs it
 
 ### Add new LLM provider
 1. Implement `LLMProvider` interface in `apps/api/src/services/chat/providers/`
@@ -576,7 +563,7 @@ Use this table when a problem statement arrives — go directly to the right fil
 | CORS error in browser | `apps/api/src/middlewares/cors.middleware.ts`, `CORS_ORIGINS` env var |
 | Rate-limit 429 errors | `apps/api/src/middlewares/rate-limit.middleware.ts` |
 | Type error after data change | `packages/types/src/domain.ts` — update type first, then `data/*.json` |
-| SSE events not reaching UI | `packages/api-client/src/client.ts`, `apps/web/src/features/chat/use-chat.ts` |
+| SSE events not reaching UI | `packages/api-client/src/client.ts`, `apps/web/features/chat/lib/use-chat.ts` |
 | Live-ticker labels wrong | `apps/api/src/services/chat/chat-pipeline.service.ts` `*_LABELS` arrays |
 | Follow-up questions missing | `extractFollowUps()` in `chat-pipeline.service.ts`, system prompt `__FOLLOWUPS__` instruction |
 

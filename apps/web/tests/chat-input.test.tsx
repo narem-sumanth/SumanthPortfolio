@@ -2,7 +2,7 @@ import * as React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import type { ChatSourceOption } from "@portfolio/types";
-import { ChatInput } from "@/features/chat/chat-input";
+import { ChatInput } from "@/features/chat";
 
 const defaultProps: { sources: ChatSourceOption[]; onToggleSource: () => void } = {
   sources: ["portfolio", "github"],

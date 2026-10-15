@@ -14,29 +14,25 @@ export interface ActivityStep {
 export function ActivityIndicator({ steps, className }: { steps: ActivityStep[]; className?: string }) {
   if (steps.length === 0) return null;
   return (
-    <ul className={cn("flex flex-col gap-1.5", className)}>
+    <ul className={cn("flex flex-col gap-2", className)}>
       {steps.map((step) => (
-        <li key={step.label} className="flex items-center gap-2 text-xs text-foreground-muted">
-          <span
-            className={cn(
-              "flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border",
-              step.status === "done" && "border-success/40 bg-success/15 text-success",
-              step.status === "active" && "border-accent/50 bg-accent-soft text-accent",
-              step.status === "pending" && "border-border bg-inset",
-            )}
-          >
+        <li
+          key={step.label}
+          className={cn(
+            "flex items-center gap-2.5 text-xs transition-colors",
+            step.status === "active" ? "text-foreground" : "text-foreground-subtle",
+          )}
+        >
+          <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center">
             {step.status === "done" ? (
-              <Check className="h-2.5 w-2.5" strokeWidth={3} />
+              <Check className="h-3 w-3" strokeWidth={2.5} />
+            ) : step.status === "active" ? (
+              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-dot" />
             ) : (
-              <span
-                className={cn(
-                  "h-1.5 w-1.5 rounded-full bg-current",
-                  step.status === "active" && "animate-pulse-dot",
-                )}
-              />
+              <span className="h-1.5 w-1.5 rounded-full bg-border-strong" />
             )}
           </span>
-          <span className={cn(step.status === "active" && "text-foreground")}>{step.label}</span>
+          <span>{step.label}</span>
         </li>
       ))}
     </ul>

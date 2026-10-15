@@ -1,11 +1,10 @@
 "use client";
 
 import * as React from "react";
-import type { ChatAction, ChatSourceOption, ChatStreamEvent, SourceReference } from "@portfolio/types";
+import type { ChatAction, ChatSourceOption, ChatStreamEvent, ChatWidget, SourceReference } from "@portfolio/types";
 import type { ActivityStep } from "@portfolio/ui";
-import { useApiClient } from "@/components/api-provider";
-import { track } from "@/lib/analytics";
-import { clearChatHistory, loadChatHistory, saveChatHistory } from "@/lib/chatStorage";
+import { useApiClient, track } from "@/features/shell";
+import { clearChatHistory, loadChatHistory, saveChatHistory } from "./chatStorage";
 
 export interface ChatMessage {
   id: string;
@@ -14,6 +13,7 @@ export interface ChatMessage {
   sources?: SourceReference[];
   actions?: ChatAction[];
   suggestions?: string[];
+  widget?: ChatWidget;
   /** The real pipeline steps taken to produce this message, preserved after streaming ends. */
   steps?: ActivityStep[];
   streaming?: boolean;
@@ -105,6 +105,7 @@ export function useChat() {
                     sources: event.data.sources,
                     actions: event.data.actions,
                     suggestions: event.data.suggestions,
+                    widget: event.data.widget,
                     steps: finalSteps,
                     streaming: false,
                   }

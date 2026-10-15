@@ -1,4 +1,4 @@
-import type { SourceReference } from "./domain";
+import type { ExperienceEntry, SourceReference } from "./domain";
 
 /**
  * API contract shared by both backend implementations (Express, FastAPI).
@@ -25,6 +25,9 @@ export interface ChatAction {
   payload?: Record<string, unknown>;
 }
 
+/** Rich, data-backed widgets a chat turn can attach alongside its text answer. */
+export type ChatWidget = { type: "experience_timeline"; entries: ExperienceEntry[] };
+
 export interface ChatMessageInput {
   role: "user" | "assistant";
   content: string;
@@ -46,6 +49,8 @@ export interface ChatResponse {
   actions?: ChatAction[];
   /** Canned follow-up prompts the visitor can tap to continue the conversation. */
   suggestions?: string[];
+  /** Verified, data-backed widget to render alongside the answer (e.g. an experience timeline). */
+  widget?: ChatWidget;
 }
 
 export type ChatStreamEvent =

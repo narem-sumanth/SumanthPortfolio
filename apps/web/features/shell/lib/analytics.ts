@@ -10,7 +10,7 @@ export type AnalyticsEvent =
   | "live_demo_clicked"
   | "contact_started"
   | "contact_submitted"
-  | "portfolio_mode_opened";
+  | "ai_panel_opened";
 
 export function track(event: AnalyticsEvent, properties?: Record<string, unknown>): void {
   if (process.env.NODE_ENV !== "production") {

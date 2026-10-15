@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { SuggestedQuestions } from "@/features/chat/suggested-questions";
+import { SuggestedQuestions } from "@/features/chat";
 
 describe("SuggestedQuestions", () => {
   it("invokes onSelect with the clicked question's text", async () => {

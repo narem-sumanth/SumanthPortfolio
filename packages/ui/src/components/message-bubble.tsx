@@ -9,6 +9,8 @@ export interface MessageBubbleProps {
   role: "user" | "assistant";
   children: string;
   sources?: SourceReference[];
+  /** Rich, data-backed content (e.g. a timeline) rendered inside the bubble, below the answer text. */
+  widget?: React.ReactNode;
   className?: string;
   /** True when this is a pipeline/network failure message, not a real answer - rendered distinctly so it never reads as the AI's actual response. */
   errored?: boolean;
@@ -39,7 +41,7 @@ const MARKDOWN_CLASSES =
  * tail edge) and the one running along the bubble's own bottom edge (nothing else draws a border
  * there) - the third edge runs along the bubble's side border, which already draws it, so stroking
  * it too would double up into a visible seam. A separate unfilled <path> draws just those two. */
-export function MessageBubble({ role, children, sources, className, errored }: MessageBubbleProps) {
+export function MessageBubble({ role, children, sources, widget, className, errored }: MessageBubbleProps) {
   const isUser = role === "user";
   return (
     <div className={cn("flex w-full", isUser ? "justify-end" : "justify-start", className)}>
@@ -67,6 +69,7 @@ export function MessageBubble({ role, children, sources, className, errored }: M
         <div className={MARKDOWN_CLASSES}>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{children}</ReactMarkdown>
         </div>
+        {!isUser && widget && <div className="mt-3 border-t border-border/60 pt-3">{widget}</div>}
         {!isUser && sources && <SourceList sources={sources} />}
       </div>
     </div>

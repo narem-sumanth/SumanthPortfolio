@@ -2,21 +2,21 @@
 
 ## Product shape
 
-This is not a portfolio with a chatbot bolted on. The AI chat *is* the primary
-interface; the classic landing page (`/portfolio`) is the alternate mode. Both
-read from the same API and the same underlying data. The landing page
-currently renders a "coming soon" placeholder while that mode is rebuilt —
-its old section components were removed rather than left as dead code; the
-API endpoints backing them (`/api/experience`, `/api/skills`, etc.) stay in
-place either way, since the chat pipeline reads the same underlying
-repository directly.
+This is not a portfolio with a chatbot bolted on, nor a chatbot with a
+portfolio bolted on — the two are one surface. `/` renders the portfolio
+(profile, experience, skills, projects, education, achievements) server-side
+from the same API and data the chat pipeline reads. The AI chat is not a
+separate route or mode; it's a slide-over side panel (`ChatPanelProvider` /
+`ChatSidePanel`) that opens over the portfolio from the "Ask AI" button or the
+floating action button, and collapses back without a navigation. A legacy
+`/portfolio` route existed briefly during the migration off a two-route
+chat/portfolio mode-switcher; it has been removed now that the portfolio is
+the only route.
 
 ```mermaid
 flowchart TD
-    Browser -->|/| Chat[Chat experience]
-    Browser -->|/portfolio| Landing[Portfolio landing page]
-    Chat --> Web[apps/web — Next.js]
-    Landing --> Web
+    Browser -->|/| Shell[apps/web — portfolio page + chat side panel]
+    Shell --> Web[apps/web — Next.js]
     Web -->|REST + SSE| API[apps/api]
     API --> Pipeline[AI pipeline: intent → tools → grounding]
     Pipeline --> Local[LocalFileSource — data/*]
@@ -37,9 +37,18 @@ quirks) for a benefit — independent team ownership and deployment — that
 doesn't apply here. Instead, `apps/web` uses internal module boundaries that
 mirror the intended separation:
 
-- `src/features/chat/` — everything the AI chat experience owns
-- `src/features/portfolio/` — everything the landing page owns
-- `src/components/` — shared shell chrome (nav, theme, command palette)
+- `app/` — routing only: root layout, the portfolio page, robots/sitemap.
+  Nothing else lives here — no `components/`, no `lib/`.
+- `features/<name>/` — every concern the app has, each in its own module
+  with its own `components/` and/or `lib/` and one `index.ts` barrel as its
+  public API: `shell` (header, theme, command palette, the typed API client,
+  analytics — app-wide infra, not a route), `portfolio` (fetchers for the
+  portfolio dataset), `chat` (the AI chat side panel: fab, panel shell,
+  message list, input, streaming hook, local persistence).
+- Nothing outside a feature reaches into its `components/`/`lib/` directly —
+  cross-feature and app-level code imports only the barrel
+  (`@/features/chat`, not `@/features/chat/components/chat-fab`). ESLint's
+  `no-restricted-imports` enforces this.
 
 If this project ever needs genuine independent deployability (e.g. a second
 team owns the chat surface), these folders are already the seam to split
@@ -125,8 +134,8 @@ overengineer). Editing the portfolio means editing these files, not the code.
 
 ## Rendering
 
-Both `/` and `/portfolio` are dynamically rendered (`export const dynamic =
-"force-dynamic"` in `app/layout.tsx`) because their content comes from a
-separately-deployed API. Static prerendering would freeze that content at
-build time — or permanently bake in the safe-fallback `null` if the API
-wasn't reachable during the build.
+`/` is dynamically rendered (`export const dynamic = "force-dynamic"` in
+`app/layout.tsx`) because its content comes from a separately-deployed
+API. Static prerendering would freeze that content at build time — or
+permanently bake in the safe-fallback `null` if the API wasn't reachable
+during the build.

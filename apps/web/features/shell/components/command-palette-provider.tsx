@@ -1,16 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Sparkles, LayoutGrid, Github, Moon } from "lucide-react";
 import { CommandPalette, type CommandPaletteGroup } from "@portfolio/ui";
 import type { Profile } from "@portfolio/types";
+import { useChatPanel } from "@/features/chat";
 
 /** Cmd/Ctrl+K launcher, wired to real navigation — no dead-end demo items. */
 export function CommandPaletteProvider({ profile }: { profile: Profile | null }) {
   const [open, setOpen] = React.useState(false);
-  const router = useRouter();
+  const { open: openChat, close: closeChat } = useChatPanel();
   const { setTheme, resolvedTheme } = useTheme();
 
   React.useEffect(() => {
@@ -30,8 +30,8 @@ export function CommandPaletteProvider({ profile }: { profile: Profile | null })
     {
       heading: "Navigate",
       items: [
-        { id: "ask-ai", label: "Ask AI", icon: Sparkles, onSelect: () => router.push("/") },
-        { id: "portfolio", label: "Explore portfolio", icon: LayoutGrid, onSelect: () => router.push("/portfolio") },
+        { id: "ask-ai", label: "Ask AI", icon: Sparkles, onSelect: openChat },
+        { id: "portfolio", label: "View portfolio", icon: LayoutGrid, onSelect: closeChat },
       ],
     },
     {

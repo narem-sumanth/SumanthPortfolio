@@ -49,32 +49,34 @@
 
 :root[data-theme="dark"],
 :root.dark {
-  --surface-base: 24 27 34;
-  --surface-elevated: 30 33 40;
-  --surface-raised: 36 39 47;
-  --surface-inset: 20 23 30;
-  --surface-floating: 40 43 51;
-  --surface-overlay: 32 35 43;
+  /* Near-black base with a faint violet cast; wider steps between levels so
+     elevation still reads once the page gets this dark. */
+  --surface-base: 11 11 15;
+  --surface-elevated: 17 17 23;
+  --surface-raised: 23 23 31;
+  --surface-inset: 7 7 11;
+  --surface-floating: 27 27 37;
+  --surface-overlay: 20 20 27;
 
-  --foreground: 237 237 235;
-  --foreground-muted: 168 168 164;
-  --foreground-subtle: 118 118 114;
+  --foreground: 241 241 245;
+  --foreground-muted: 170 170 180;
+  --foreground-subtle: 130 130 142;
 
-  --border: 44 44 46;
-  --border-strong: 62 62 64;
+  --border: 40 40 52;
+  --border-strong: 60 60 76;
 
   --accent: 148 107 254;
   --accent-foreground: 12 12 13;
-  --accent-soft: 48 38 89;
+  --accent-soft: 36 27 72;
 
-  --success: 74 222 128;
+  --success: 52 199 123;
   --warning: 251 191 36;
   --danger: 248 113 113;
 
   --shadow-color: 0 0 0;
-  --shadow-button-raw: 0 3px 12px 2px rgb(var(--shadow-color) / 0.28), 0 1px 4px 1px rgb(var(--shadow-color) / 0.18);
-  --shadow-floating-raw: 0 16px 40px rgb(var(--shadow-color) / 0.5), 0 2px 8px rgb(var(--shadow-color) / 0.35);
-  --shadow-overlay-raw: 0 24px 64px rgb(var(--shadow-color) / 0.65);
+  --shadow-button-raw: 0 3px 12px 2px rgb(var(--shadow-color) / 0.32), 0 1px 4px 1px rgb(var(--shadow-color) / 0.2);
+  --shadow-floating-raw: 0 16px 40px rgb(var(--shadow-color) / 0.55), 0 2px 8px rgb(var(--shadow-color) / 0.4);
+  --shadow-overlay-raw: 0 24px 64px rgb(var(--shadow-color) / 0.7);
 
   color-scheme: dark;
 }

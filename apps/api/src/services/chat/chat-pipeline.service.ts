@@ -1,4 +1,4 @@
-import type { ChatResponse, ChatSourceOption, SourceReference } from "@portfolio/types";
+import type { ChatAction, ChatResponse, ChatSourceOption, ChatWidget, SourceReference } from "@portfolio/types";
 import { portfolioRepository } from "../../repositories/portfolio.repository";
 import type { RetrievedDocument } from "../retrieval/types";
 import { logger } from "../../utils/logger";
@@ -25,10 +25,39 @@ export type PipelineEvent = ActivityEvent | TokenEvent | DoneEvent | ErrorEvent;
 
 type Intent = "project" | "github" | "experience" | "skills" | "contact" | "chitchat" | "general";
 
+// A bare "yeah"/"sure" etc. carries no keywords of its own - treated as chitchat
+// it would skip retrieval; treated literally for retrieval it matches nothing
+// (an empty query scores zero against every document). Either way the model
+// ends up with nothing to say and just repeats its own last question. When one
+// of these follows an assistant turn, the reply is really about whatever that
+// turn offered, so intent/retrieval should be driven off of that instead.
+const CONTINUATION_RE =
+  /^(yeah|yep|yup|ya|yes|sure|please|go ahead|sounds good|alright|ok(ay)?|do (that|it)|i'?d like that|tell me( more)?)[.!?]*$/;
+
+function lastAssistantMessage(history: LLMMessage[]): string | undefined {
+  for (let i = history.length - 1; i >= 0; i--) {
+    if (history[i]?.role === "assistant") return history[i]?.content;
+  }
+  return undefined;
+}
+
+/**
+ * The text intent detection and retrieval should actually run against: the
+ * prior assistant turn's content when this message is just agreeing to
+ * continue it, otherwise the message itself.
+ */
+function resolveRetrievalQuery(message: string, history: LLMMessage[]): string {
+  const trimmed = message.toLowerCase().trim();
+  if (!CONTINUATION_RE.test(trimmed)) return message;
+  const prior = lastAssistantMessage(history);
+  return prior ? `${prior} ${message}` : message;
+}
+
 function detectIntent(message: string): Intent {
   const text = message.toLowerCase().trim();
-  if (/\b(contact|reach out|get in touch|email me|message (you|sumanth)|hire me to)\b/.test(text) &&
-    /\b(contact|reach out|touch|message)\b/.test(text)) {
+  // "hire you" is deliberately excluded - it also matches "why should I hire
+  // you?", which wants a real pitch from the model, not the contact form.
+  if (/\b(contact|reach out|get in touch|email me|message (you|sumanth))\b/.test(text)) {
     return "contact";
   }
   // Chitchat needs no retrieval — model replies from context alone.
@@ -39,8 +68,8 @@ function detectIntent(message: string): Intent {
   if (/\b(project|projects|built|built with|built using|kubernetes|docker|terraform|deploy(ed|ment)?)\b/.test(text)) {
     return "project";
   }
-  if (/\b(experience|work(ed)?|compan(y|ies)|career|job|role)\b/.test(text)) return "experience";
-  if (/\b(skill|technolog|stack|proficient|expert|know)\b/.test(text)) return "skills";
+  if (/\b(experience|worked|compan(y|ies)|career|job|role|background)\b/.test(text)) return "experience";
+  if (/\b(skills?|technolog\w*|stack|proficient|expert|know)\b/.test(text)) return "skills";
   return "general";
 }
 
@@ -92,7 +121,8 @@ export interface PipelineRequest {
  * a future FastAPI (or any other) backend implementation must replicate.
  */
 export async function runChatPipeline(request: PipelineRequest, emit: (event: PipelineEvent) => void): Promise<void> {
-  const intent = detectIntent(request.message);
+  const retrievalQuery = resolveRetrievalQuery(request.message, request.history);
+  const intent = detectIntent(retrievalQuery);
   const selectedSources = request.sources && request.sources.length > 0 ? request.sources : DEFAULT_SOURCES;
   const usePortfolio = selectedSources.includes("portfolio");
   const useGoogle = selectedSources.includes("google");
@@ -101,26 +131,17 @@ export async function runChatPipeline(request: PipelineRequest, emit: (event: Pi
   // Emitted right before real work starts — never on timer, never for skipped stages.
   emit({ type: "status", label: pick(QUESTION_EXTRACTOR_LABELS) });
 
-  if (intent === "contact") {
-    emit({ type: "status", label: pick(PREPARING_RESPONSE_LABELS) });
-    const data: ChatResponse = {
-      answer: "Sure - you can leave your name, email, and message right here and I'll make sure Sumanth receives it.",
-      sources: [],
-      actions: [{ type: "show_contact_form", label: "Contact Sumanth" }],
-    };
-    emit({ type: "done", data });
-    return;
-  }
-
   let documents: RetrievedDocument[] = [];
+  let widget: ChatWidget | undefined;
 
   try {
-    if (intent === "chitchat") {
-      // Chitchat — reply from context, no search needed.
+    if (intent === "chitchat" || intent === "contact") {
+      // Chitchat/contact — the model answers from conversational context and
+      // system-prompt rule 10 alone; no retrieval needed.
     } else if (intent === "github") {
       if (useGithub) {
         emit({ type: "status", label: findingSourcesLabel(["github"]) });
-        documents = (await searchGitHub(request.message)).documents;
+        documents = (await searchGitHub(retrievalQuery)).documents;
       }
     } else if (intent === "project") {
 // Direct lookup avoids fuzzy misses (e.g., "projects" vs "Project").
@@ -136,18 +157,29 @@ export async function runChatPipeline(request: PipelineRequest, emit: (event: Pi
       let githubDocs: RetrievedDocument[] = [];
       if (useGithub) {
         emit({ type: "status", label: findingSourcesLabel(["github"]) });
-        githubDocs = (await searchGitHub(request.message)).documents;
+        githubDocs = (await searchGitHub(retrievalQuery)).documents;
       }
       documents = [...projectDocs, ...githubDocs];
     } else if (intent === "experience") {
-      documents = usePortfolio
-        ? getExperience().map((exp) => ({
-            id: `experience-${exp.id}`,
-            sourceKind: "portfolio" as const,
-            title: `${exp.title} at ${exp.company}`,
-            content: `${exp.summary}\nHighlights: ${exp.highlights.join("; ")}\nTechnologies: ${exp.technologies.join(", ")}`,
-          }))
-        : [];
+      if (usePortfolio) {
+        const experience = getExperience();
+        documents = experience.map((exp) => ({
+          id: `experience-${exp.id}`,
+          sourceKind: "portfolio" as const,
+          title: `${exp.title} at ${exp.company}`,
+          // Dates line is load-bearing: the system prompt's tense check (rule
+          // 1a) depends on it to tell a current role from a past one.
+          content: [
+            exp.summary,
+            `Highlights: ${exp.highlights.join("; ")}`,
+            `Technologies: ${exp.technologies.join(", ")}`,
+            `Dates: ${exp.startDate} – ${exp.endDate ?? "present"}`,
+          ].join("\n"),
+        }));
+        if (experience.length > 0) widget = { type: "experience_timeline", entries: experience };
+      } else {
+        documents = [];
+      }
     } else if (intent === "skills") {
       if (usePortfolio) {
         const skills = getSkills();
@@ -162,12 +194,12 @@ export async function runChatPipeline(request: PipelineRequest, emit: (event: Pi
       }
     } else if (usePortfolio) {
       emit({ type: "status", label: findingSourcesLabel(["portfolio"]) });
-      documents = (await searchPortfolio(request.message)).documents;
+      documents = (await searchPortfolio(retrievalQuery)).documents;
     }
 
-    if (useGoogle && intent !== "chitchat") {
+    if (useGoogle && intent !== "chitchat" && intent !== "contact") {
       emit({ type: "status", label: "Searching the web via Google" });
-      documents = [...documents, ...(await searchWeb(request.message))];
+      documents = [...documents, ...(await searchWeb(retrievalQuery))];
     }
   } catch (err) {
     logger.error({ err, intent, sources: selectedSources }, "Chat pipeline retrieval failed");
@@ -224,8 +256,13 @@ export async function runChatPipeline(request: PipelineRequest, emit: (event: Pi
   // Extract AI-generated follow-up suggestions
   const { answer: cleanAnswer, followUps } = extractFollowUps(finalAnswer);
 
+  // The form itself is a UI affordance, not something the model should have to
+  // ask for in prose - attach it whenever the visitor's turn was contact-shaped.
+  const actions: ChatAction[] | undefined =
+    intent === "contact" ? [{ type: "show_contact_form", label: "Contact Sumanth" }] : undefined;
+
   logger.info({ intent, sources: selectedSources, documents: documents.length }, "Chat pipeline completed");
-  emit({ type: "done", data: { answer: cleanAnswer, sources, suggestions: followUps } });
+  emit({ type: "done", data: { answer: cleanAnswer, sources, suggestions: followUps, widget, actions } });
 }
 
 function dedupeSources(sources: SourceReference[]): SourceReference[] {

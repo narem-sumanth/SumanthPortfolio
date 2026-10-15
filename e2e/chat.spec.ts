@@ -3,6 +3,7 @@ import { test, expect } from "@playwright/test";
 test("visitor can send a message and receive a reply", async ({ page }) => {
   await page.goto("/");
 
+  await page.getByRole("button", { name: "Open AI chat" }).click();
   await page.locator("textarea").fill("Tell me about your experience");
   await page.getByRole("button", { name: "Send message" }).click();
 

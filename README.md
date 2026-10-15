@@ -1,6 +1,6 @@
 # Sumanth AI — AI-First Personal Portfolio
 
-An intelligent portfolio where the **AI chat is the primary interface**. Ask about experience, skills, or projects — it answers from verified, version-controlled data, never hallucinated. A classic landing page (`/portfolio`) serves as the alternate mode, reading from the same API and data.
+An intelligent portfolio where the **AI chat is the primary interface**. Ask about experience, skills, or projects — it answers from verified, version-controlled data, never hallucinated. The portfolio renders at `/`; the AI chat opens over it as a slide-over side panel, not a separate route.
 
 ---
 
@@ -80,22 +80,16 @@ SumanthPortfolio/
 │   │   │   └── utils/logger.ts   # Pino structured logging
 │   │   └── package.json
 │   │
-│   └── web/                       # Next.js 14 (App Router) Frontend
-│       ├── src/
-│       │   ├── app/              # App Router pages (chat, portfolio, robots, sitemap)
-│       │   ├── components/       # Shared layout components (chrome, theme, palette)
-│       │   ├── features/chat/    # Feature-colocated chat components
-│       │   │   ├── chat-view.tsx        # Main chat container
-│       │   │   ├── chat-input.tsx       # Message input
-│       │   │   ├── chat-message-list.tsx
-│       │   │   ├── live-step-ticker.tsx # Streaming step indicator
-│       │   │   ├── steps-disclosure.tsx # Expandable reasoning steps
-│       │   │   ├── source-picker.tsx    # Source selection UI
-│       │   │   ├── suggested-questions.tsx
-│       │   │   ├── contact-flow.tsx     # Contact form modal
-│       │   │   └── use-chat.ts          # SSE hook + state
-│       │   ├── lib/              # Client utilities (apiClient, analytics, storage)
-│       │   └── tests/            # Vitest + React Testing Library
+│   └── web/                       # Next.js (App Router) Frontend — no src/, feature-sliced
+│       ├── app/                   # Routing ONLY (layout, home page, robots, sitemap)
+│       ├── features/              # Every feature owns components/ + lib/ + an index.ts barrel.
+│       │   │                      # Imported only via that barrel (@/features/<name>) — never
+│       │   │                      # by reaching into its components/ or lib/ (lint-enforced).
+│       │   ├── shell/             # App-wide chrome + infra: header, theme, command palette,
+│       │   │                      # typed API client, analytics — not a route, not content
+│       │   ├── portfolio/         # Safe fetchers for the portfolio dataset
+│       │   └── chat/              # AI chat side panel: fab, panel shell, chat view, use-chat, …
+│       ├── tests/                 # Vitest + React Testing Library
 │       └── package.json
 │
 ├── packages/

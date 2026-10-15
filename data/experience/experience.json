@@ -1,30 +1,62 @@
 [
   {
-    "id": "exp-current",
-    "company": "PLACEHOLDER: Rever.ai",
-    "title": "Software Engineer",
-    "startDate": "2024-01",
+    "id": "exp-rever",
+    "company": "Rever",
+    "title": "SDE",
+    "startDate": "2026-04",
     "endDate": null,
-    "location": "Remote",
-    "summary": "PLACEHOLDER: describe your current role's scope and impact in 1-2 sentences.",
+    "summary": "Full-stack and DevOps engineer across the product lifecycle, from frontend and SEO, to backend APIs, to cloud infrastructure and self-hosted deployments, with recent focus on agentic AI workflows.",
     "highlights": [
-      "PLACEHOLDER: a concrete, verifiable highlight (shipped feature, system owned, metric improved).",
-      "PLACEHOLDER: a second highlight, ideally something infra/DevOps or AI related."
+      "Built and optimized frontend features using Next.js, including SEO improvements during the initial months on the product.",
+      "Contributed to backend development using Django, Django REST Framework (DRF), and PostgreSQL, building and maintaining core APIs.",
+      "Owned DevOps responsibilities: containerized services with Docker and debugged/maintained Linux servers on AWS.",
+      "Implemented container-based deployments on AWS ECS Fargate, with networking configured via custom VPCs.",
+      "Provisioned infrastructure as code with AWS CloudFormation and set up monitoring/observability with AWS CloudWatch.",
+      "Contributed to FastAPI services as the product evolved, building out a fully agentic workflow.",
+      "Designed and maintained two self-hosting deployment paths for customers: Docker Compose and Kubernetes via Helm charts."
     ],
-    "technologies": ["TypeScript", "Node.js", "React", "AWS", "Docker"]
+    "technologies": [
+      "Next.js",
+      "Django",
+      "Django REST Framework",
+      "PostgreSQL",
+      "FastAPI",
+      "Docker",
+      "Kubernetes",
+      "Helm",
+      "AWS ECS",
+      "AWS Fargate",
+      "AWS VPC",
+      "AWS CloudFormation",
+      "AWS CloudWatch",
+      "Linux"
+    ]
   },
   {
-    "id": "exp-previous",
-    "company": "PLACEHOLDER: Previous Company",
-    "title": "Software Engineer",
-    "startDate": "2022-06",
-    "endDate": "2023-12",
-    "location": "PLACEHOLDER",
-    "summary": "PLACEHOLDER: describe this role's scope and impact.",
+    "id": "exp-designblocks",
+    "company": "Design Blocks",
+    "title": "MERN Stack Developer",
+    "startDate": "2024-09",
+    "endDate": "2025-03",
+    "summary": "Developed intuitive web and mobile products using the MERN stack and React Native, translating user requirements into shipped features with containerized deployments.",
     "highlights": [
-      "PLACEHOLDER: highlight one.",
-      "PLACEHOLDER: highlight two."
+      "Built responsive web applications using the MERN stack (MongoDB, Express, React, Node.js), translating user requirements into clean, maintainable features.",
+      "Developed cross-platform mobile applications using React Native, extending core product functionality to iOS and Android.",
+      "Containerized and deployed applications using Docker to streamline development and deployment workflows."
     ],
-    "technologies": ["Python", "Kubernetes", "Terraform", "PostgreSQL"]
+    "technologies": ["React", "React Native", "MongoDB", "Express", "Node.js", "Docker"]
+  },
+  {
+    "id": "exp-entrepreneurship-network",
+    "company": "The Entrepreneurship Network",
+    "title": "React Developer Intern",
+    "startDate": "2024-07",
+    "endDate": "2024-09",
+    "summary": "Developed web applications using React and improved SEO performance for the organization's websites.",
+    "highlights": [
+      "Developed web applications using React, building reusable UI components and features.",
+      "Boosted SEO performance for websites, improving discoverability and search rankings."
+    ],
+    "technologies": ["React"]
   }
 ]
