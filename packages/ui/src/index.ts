@@ -9,7 +9,6 @@ export * from "./components/sheet";
 export * from "./components/activity-indicator";
 export * from "./components/source-chip";
 export * from "./components/message-bubble";
-export * from "./components/project-card";
 export * from "./components/experience-timeline";
 export * from "./components/contact-card";
 export * from "./components/command-palette";

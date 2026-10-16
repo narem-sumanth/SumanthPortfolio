@@ -2,7 +2,7 @@
   "name": "Sumanth Narem",
   "role": "Software Engineer",
   "tagline": "Building across full-stack, DevOps, cloud, and AI.",
-  "bio": "PLACEHOLDER BIO: replace with your real background. Sumanth is a software engineer who enjoys building end-to-end products: from infrastructure and deployment pipelines to full-stack applications and, more recently, AI-powered systems. This portfolio itself is one such project, an AI-first interface backed by verified, structured data instead of freeform hallucination.",
+  "bio": "Sumanth Narem is a software engineer who builds end-to-end: from infrastructure and deployment pipelines to full-stack applications and, more recently, agentic AI systems. At Rever, he works across the stack, from Next.js and SEO on the frontend to Django and FastAPI on the backend, with self-hosted deployments on Docker Compose and Kubernetes via Helm, provisioned with AWS CloudFormation. Before that, he shipped MERN and React Native products at Design Blocks, and built React applications at The Entrepreneurship Network. He is currently learning retrieval-augmented generation, infrastructure as code at scale, and applied LLM evaluation. This portfolio itself is proof of the approach: a RAG-backed AI twin, grounded in verified, version-controlled data instead of freeform hallucination.",
   "location": "PLACEHOLDER: City, Country",
   "availability": "Software Engineer, Rever",
   "currentlyLearning": ["Retrieval-augmented generation", "Infrastructure as code at scale", "Applied LLM evaluation"],

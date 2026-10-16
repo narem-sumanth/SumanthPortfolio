@@ -7,8 +7,7 @@
 @custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
 @theme {
-  --font-sans: var(--font-geist-sans), "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-sans: var(--font-display), "Archivo", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   --color-base: rgb(var(--surface-base));
   --color-elevated: rgb(var(--surface-elevated));

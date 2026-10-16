@@ -19,11 +19,16 @@ export function ChatView({
   profile,
   variant = "page",
   expanded = false,
+  initialMessage,
+  onConsumeInitialMessage,
 }: {
   profile: Profile | null;
   variant?: "page" | "panel";
   /** Panel variant only: the side panel has been expanded to full width - cap content at 5xl instead of going edge-to-edge. */
   expanded?: boolean;
+  /** A message asked from outside the panel (the hero's live control) — sent once, as soon as it's safe to. */
+  initialMessage?: string | null;
+  onConsumeInitialMessage?: () => void;
 }) {
   const { messages, activity, isStreaming, isRestoring, sources, toggleSource, sendMessage, clearChat } = useChat();
   const hasStarted = messages.length > 0;
@@ -32,6 +37,14 @@ export function ChatView({
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
   const isPanel = variant === "panel";
   const panelMaxWidth = expanded ? "max-w-5xl" : "max-w-none";
+
+  // Fires the hero's live-control question exactly once, as soon as restored
+  // history has settled — never races the stored-conversation load.
+  React.useEffect(() => {
+    if (!initialMessage || isRestoring || hasStarted) return;
+    sendMessage(initialMessage);
+    onConsumeInitialMessage?.();
+  }, [initialMessage, isRestoring, hasStarted, sendMessage, onConsumeInitialMessage]);
 
   function handleClear() {
     if (window.confirm("Clear this conversation? This can't be undone.")) {

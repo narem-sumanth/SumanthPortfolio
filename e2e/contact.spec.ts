@@ -4,8 +4,11 @@ test("visitor can reach the contact form and submit a message", async ({ page })
   await page.goto("/");
 
   await page.getByRole("button", { name: "Open AI chat" }).click();
-  await page.locator("textarea").fill("How can I contact you?");
-  await page.getByRole("button", { name: "Send message" }).click();
+  // Scoped to the slide-over panel — the homepage hero has its own, separate
+  // textarea (the live "ask" control) that is always present on the page.
+  const panel = page.getByRole("dialog");
+  await panel.locator("textarea").fill("How can I contact you?");
+  await panel.getByRole("button", { name: "Send message" }).click();
 
   const contactForm = page.locator("form");
   await expect(contactForm.getByLabel("Your name")).toBeVisible({ timeout: 20_000 });
