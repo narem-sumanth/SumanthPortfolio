@@ -26,15 +26,6 @@ body {
   color: rgb(var(--foreground));
 }
 
-/* Dark mode polish — faint violet aurora over the near-black base. */
-:root[data-theme="dark"] body,
-:root.dark body {
-  background-image:
-    radial-gradient(900px 520px at 50% -8%, rgb(var(--accent) / 0.08), transparent 62%),
-    radial-gradient(720px 480px at 100% 108%, rgb(var(--accent) / 0.05), transparent 58%);
-  background-repeat: no-repeat;
-}
-
 :root[data-theme="dark"] ::selection,
 :root.dark ::selection {
   background-color: rgb(var(--accent) / 0.35);

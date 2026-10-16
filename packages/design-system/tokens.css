@@ -14,30 +14,31 @@
  */
 
 :root {
-  /* --font-geist-sans / --font-geist-mono are injected by next/font in apps/web/app/layout.tsx;
-     the --font-sans / --font-mono / --radius-* Tailwind theme values live in theme.css */
+  /* --font-display is injected by next/font in apps/web/app/layout.tsx;
+     the --font-sans / --radius-* Tailwind theme values live in theme.css */
 
-  --surface-base: 255 255 255;
-  --surface-elevated: 255 255 255;
-  --surface-raised: 255 255 255;
-  --surface-inset: 248 248 246;
-  --surface-floating: 255 255 255;
-  --surface-overlay: 255 255 255;
+  /* Sand and moss, one deep accent — no violet, no gradients. */
+  --surface-base: 221 214 198;
+  --surface-elevated: 226 220 206;
+  --surface-raised: 212 204 187;
+  --surface-inset: 200 192 174;
+  --surface-floating: 230 225 212;
+  --surface-overlay: 233 228 216;
 
-  --foreground: 23 23 22;
-  --foreground-muted: 96 96 92;
-  --foreground-subtle: 140 140 135;
+  --foreground: 42 42 38;
+  --foreground-muted: 89 87 78;
+  --foreground-subtle: 125 122 110;
 
-  --border: 224 224 220;
-  --border-strong: 200 200 195;
+  --border: 196 188 170;
+  --border-strong: 170 162 144;
 
-  --accent: 121 70 254;
+  --accent: 79 98 56;
   --accent-foreground: 255 255 255;
-  --accent-soft: 238 232 255;
+  --accent-soft: 214 219 199;
 
-  --success: 22 163 74;
-  --warning: 217 119 6;
-  --danger: 220 38 38;
+  --success: 74 128 82;
+  --warning: 163 122 53;
+  --danger: 158 58 51;
 
   --shadow-color: 20 20 20;
   --shadow-button-raw: 0 2px 6px 1px rgb(var(--shadow-color) / 0.07), 0 1px 3px 1px rgb(var(--shadow-color) / 0.05);
@@ -49,29 +50,28 @@
 
 :root[data-theme="dark"],
 :root.dark {
-  /* Near-black base with a faint violet cast; wider steps between levels so
-     elevation still reads once the page gets this dark. */
-  --surface-base: 11 11 15;
-  --surface-elevated: 17 17 23;
-  --surface-raised: 23 23 31;
-  --surface-inset: 7 7 11;
-  --surface-floating: 27 27 37;
-  --surface-overlay: 20 20 27;
+  /* Warm near-black — the same sand-and-moss system, inverted. No blue or violet cast. */
+  --surface-base: 26 25 22;
+  --surface-elevated: 34 33 29;
+  --surface-raised: 42 40 35;
+  --surface-inset: 19 18 16;
+  --surface-floating: 48 46 40;
+  --surface-overlay: 37 36 31;
 
-  --foreground: 241 241 245;
-  --foreground-muted: 170 170 180;
-  --foreground-subtle: 130 130 142;
+  --foreground: 225 219 201;
+  --foreground-muted: 173 166 148;
+  --foreground-subtle: 132 126 112;
 
-  --border: 40 40 52;
-  --border-strong: 60 60 76;
+  --border: 58 55 48;
+  --border-strong: 82 78 68;
 
-  --accent: 148 107 254;
-  --accent-foreground: 12 12 13;
-  --accent-soft: 36 27 72;
+  --accent: 140 173 100;
+  --accent-foreground: 20 20 17;
+  --accent-soft: 46 54 35;
 
-  --success: 52 199 123;
-  --warning: 251 191 36;
-  --danger: 248 113 113;
+  --success: 110 186 120;
+  --warning: 214 165 90;
+  --danger: 214 100 90;
 
   --shadow-color: 0 0 0;
   --shadow-button-raw: 0 3px 12px 2px rgb(var(--shadow-color) / 0.32), 0 1px 4px 1px rgb(var(--shadow-color) / 0.2);

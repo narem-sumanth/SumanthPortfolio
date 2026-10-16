@@ -10,10 +10,15 @@ export function ChatSidePanel({
   profile,
   open,
   onOpenChange,
+  initialMessage,
+  onConsumeInitialMessage,
 }: {
   profile: Profile | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** A message sent from outside the panel (e.g. the hero's live control) to ask as soon as it opens. */
+  initialMessage?: string | null;
+  onConsumeInitialMessage?: () => void;
 }) {
   const [expanded, setExpanded] = React.useState(false);
 
@@ -48,7 +53,13 @@ export function ChatSidePanel({
           </Tooltip>
         </header>
         <div className="min-h-0 flex-1">
-          <ChatView profile={profile} variant="panel" expanded={expanded} />
+          <ChatView
+            profile={profile}
+            variant="panel"
+            expanded={expanded}
+            initialMessage={initialMessage}
+            onConsumeInitialMessage={onConsumeInitialMessage}
+          />
         </div>
       </SheetContent>
     </Sheet>

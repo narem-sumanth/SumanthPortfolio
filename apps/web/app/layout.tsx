@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Archivo } from "next/font/google";
 import { TooltipProvider } from "@portfolio/ui";
 import { AppChrome, ThemeProvider, ApiProvider } from "@/features/shell";
 import { getProfileSafe } from "@/features/portfolio";
 import "./globals.css";
 
-const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans", display: "swap" });
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
+// Variable font (weight omitted on purpose — loads the full wght range) with
+// the extra `wdth` axis, so display type can be set at a condensed stretch
+// via `font-stretch` while body text stays at its normal width.
+const archivo = Archivo({
+  subsets: ["latin"],
+  axes: ["wdth"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 // Profile data lives in a separately-deployed API, not this app's build —
 // static prerendering would freeze it (or bake in the safe-fallback null
@@ -43,7 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={archivo.variable}
     >
       <body>
         <ApiProvider baseUrl={process.env.API_URL ?? ""}>
