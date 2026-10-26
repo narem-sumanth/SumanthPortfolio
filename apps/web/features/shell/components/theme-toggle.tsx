@@ -1,17 +1,11 @@
 "use client";
 
-import * as React from "react";
-import { useTheme } from "next-themes";
+import { useTheme } from "./theme-provider";
 import { Moon, Sun } from "lucide-react";
 import { IconButton, Tooltip, TooltipContent, TooltipTrigger } from "@portfolio/ui";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => setMounted(true), []);
-
-  if (!mounted) return <div className="h-9 w-9" aria-hidden="true" />;
-
   const isDark = resolvedTheme === "dark";
 
   return (

@@ -1,56 +1,94 @@
 "use client";
 
 import * as React from "react";
-import { Maximize2, Minimize2, Sparkles } from "lucide-react";
-import { IconButton, Sheet, SheetContent, SheetTitle, Tooltip, TooltipContent, TooltipTrigger } from "@portfolio/ui";
+import { X, Sparkles, Zap } from "lucide-react";
 import type { Profile } from "@portfolio/types";
+import { useChatPanel } from "./chat-panel-provider";
 import { ChatView } from "./chat-view";
 
-export function ChatSidePanel({
-  profile,
-  open,
-  onOpenChange,
-}: {
+interface ChatSidePanelProps {
   profile: Profile | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) {
-  const [expanded, setExpanded] = React.useState(false);
+}
 
-  // Always reopen collapsed - expand is a per-session choice, not a sticky preference.
+export function ChatSidePanel({ profile }: ChatSidePanelProps) {
+  const { isOpen, close } = useChatPanel();
+  const panelRef = React.useRef<HTMLDivElement>(null);
+
   React.useEffect(() => {
-    if (!open) setExpanded(false);
-  }, [open]);
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [isOpen, close]);
 
-  // The panel is already right-anchored (`right: 0`), so growing only `width`
-  // pushes the left edge out to fill the screen - `left` resolves on its own,
-  // no need to touch it. This also keeps both ends of the transition as
-  // concrete lengths (vw-based, never "auto"), so it animates smoothly.
-  const expandedStyle = expanded ? { width: "100vw" } : undefined;
+  React.useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  const firstName = profile?.name?.split(" ")[0] ?? "Sumanth";
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent style={expandedStyle}>
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border px-4 pr-12">
-          <Sparkles className="h-4 w-4 text-accent" aria-hidden="true" />
-          <SheetTitle>Ask AI</SheetTitle>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <IconButton
-                aria-label={expanded ? "Collapse panel" : "Expand panel"}
-                className="ml-auto"
-                onClick={() => setExpanded((value) => !value)}
-              >
-                {expanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-              </IconButton>
-            </TooltipTrigger>
-            <TooltipContent>{expanded ? "Collapse" : "Expand"}</TooltipContent>
-          </Tooltip>
-        </header>
-        <div className="min-h-0 flex-1">
-          <ChatView profile={profile} variant="panel" expanded={expanded} />
+    <div
+      className="fixed inset-0 z-50 flex"
+      role="dialog"
+      aria-modal="true"
+      aria-label="AI Chat"
+    >
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"
+        onClick={close}
+        aria-hidden="true"
+      />
+
+      {/* Panel */}
+      <div
+        ref={panelRef}
+        className="absolute top-0 right-0 flex h-full w-full flex-col border-l border-border bg-base sm:max-w-[480px]"
+        style={{ animation: "slide-in-right 0.38s cubic-bezier(0.16,1,0.3,1) both" }}
+      >
+        {/* Header */}
+        <div className="flex shrink-0 items-center justify-between border-b border-border bg-elevated/60 px-5 py-3.5 backdrop-blur-sm">
+          <div className="flex items-center gap-3">
+            <div className="relative flex-shrink-0">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/15 ring-1 ring-accent/30">
+                <Sparkles className="h-4 w-4 text-accent" aria-hidden="true" />
+              </div>
+              <span
+                className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-base bg-success"
+                aria-hidden="true"
+              />
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-foreground">
+                {firstName}&rsquo;s AI Twin
+              </p>
+              <p className="flex items-center gap-1.5 text-[11px] text-foreground-subtle">
+                <Zap className="h-2.5 w-2.5 text-accent" aria-hidden="true" />
+                NVIDIA Nemotron · always online
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={close}
+            aria-label="Close chat"
+            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md text-foreground-muted transition-colors hover:bg-raised hover:text-foreground"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
-      </SheetContent>
-    </Sheet>
+
+        {/* Scrollable chat area */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+          <ChatView profile={profile} compact />
+        </div>
+      </div>
+    </div>
   );
 }

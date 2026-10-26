@@ -3,8 +3,6 @@
 import * as React from "react";
 import type { Profile } from "@portfolio/types";
 import { track } from "@/features/shell";
-import { ChatFab } from "./chat-fab";
-import { ChatSidePanel } from "./chat-side-panel";
 
 interface ChatPanelContextValue {
   isOpen: boolean;
@@ -20,8 +18,7 @@ export function useChatPanel() {
   return ctx;
 }
 
-/** Hosts the AI chat as a slide-over panel (full-screen on mobile) instead of a separate route. */
-export function ChatPanelProvider({ profile, children }: { profile: Profile | null; children: React.ReactNode }) {
+export function ChatPanelProvider({ profile: _profile, children }: { profile: Profile | null; children: React.ReactNode }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const value = React.useMemo<ChatPanelContextValue>(
@@ -36,11 +33,5 @@ export function ChatPanelProvider({ profile, children }: { profile: Profile | nu
     [isOpen],
   );
 
-  return (
-    <ChatPanelContext.Provider value={value}>
-      {children}
-      {!isOpen && <ChatFab onClick={value.open} />}
-      <ChatSidePanel profile={profile} open={isOpen} onOpenChange={setIsOpen} />
-    </ChatPanelContext.Provider>
-  );
+  return <ChatPanelContext.Provider value={value}>{children}</ChatPanelContext.Provider>;
 }

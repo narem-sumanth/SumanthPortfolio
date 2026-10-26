@@ -1,16 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Archivo, Space_Grotesk, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { TooltipProvider } from "@portfolio/ui";
 import { AppChrome, ThemeProvider, ApiProvider } from "@/features/shell";
 import { getProfileSafe } from "@/features/portfolio";
 import "./globals.css";
 
-const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans", display: "swap" });
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
+const archivo = Archivo({
+  subsets: ["latin"],
+  variable: "--font-archivo",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
+});
 
-// Profile data lives in a separately-deployed API, not this app's build —
-// static prerendering would freeze it (or bake in the safe-fallback null
-// forever if the API isn't reachable at build time). Fetch it per-request.
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+});
+
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -43,9 +58,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${archivo.variable} ${spaceGrotesk.variable} ${geistMono.variable}`}
     >
       <body>
+        <Script
+          id="portfolio-theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('portfolio-theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);if(r==='dark')document.documentElement.classList.add('dark');}catch(e){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark');}})();`,
+          }}
+        />
         <ApiProvider baseUrl={process.env.API_URL ?? ""}>
           <ThemeProvider>
             <TooltipProvider delayDuration={200}>

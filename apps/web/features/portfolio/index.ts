@@ -8,3 +8,6 @@ export {
   getEducationSafe,
   getAchievementsSafe,
 } from "./lib/serverApi";
+
+// Portfolio feature components
+export { HeroSection, ProjectCarousel, ServicesSection } from "./components";

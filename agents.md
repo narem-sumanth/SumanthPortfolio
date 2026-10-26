@@ -10,6 +10,13 @@ This file provides mandatory instructions for any AI agent working on this codeb
 4. **Verify after changes** — Run `pnpm lint`, `pnpm typecheck`, and `pnpm test` after modifications.
 5. **Never read `.env` files** — Agents are blocked from reading environment files. Use the per-app `.env.example` (`apps/api/.env.example`, `apps/web/.env.example`) as reference only. All env vars validated at boot via Zod (`apps/api/src/config/env.ts`).
 
+## Agent Skills
+
+Cross-tool playbooks live in `.agents/skills/` and apply to **any** agent working on this repo, not just Claude Code.
+
+- **`portfolio-experience-designer`** (`.agents/skills/portfolio-experience-designer.md`) — Portfolio experience design: crafting compelling developer portfolio experiences with strategic content architecture, interactive showcases, narrative-driven project presentations, and conversion-focused UX patterns. Read it before designing, building, or reviewing portfolio pages, project case studies, or personal brand experiences.
+- **`ui-ux-pro-max`** (`.agents/skills/ui-ux-pro-max.md`) — UI/UX design intelligence for web, mobile, and desktop: 79 searchable styles, 192 product palettes, 74 font pairings, 119 UX guidelines, 105 icons, 17 GSAP presets, 25 chart types, and 22 stacks. Use when designing, building, reviewing, or fixing interfaces — pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific implementation.
+
 ## Design Principles
 
 - **Separation of Concerns** — Layered architecture: controllers → services → repositories

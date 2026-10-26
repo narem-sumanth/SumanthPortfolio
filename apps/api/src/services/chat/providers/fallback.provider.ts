@@ -48,16 +48,13 @@ export class FallbackProvider implements LLMProvider {
 
   private shouldFallback(error: unknown): boolean {
     if (error instanceof ProviderError) {
-      return error.statusCode !== undefined && this.fallbackStatusCodes.includes(error.statusCode);
+      // 4xx client errors (bad key, quota, bad request) are permanent for the
+      // primary provider but the MockProvider still works — always fall back.
+      return true;
     }
     if (error instanceof Error) {
-      const message = error.message.toLowerCase();
-      return (
-        message.includes("503") ||
-        message.includes("service unavailable") ||
-        message.includes("temporarily unavailable") ||
-        message.includes("overloaded")
-      );
+      // Network errors, timeouts, etc. — always fall back.
+      return true;
     }
     return false;
   }

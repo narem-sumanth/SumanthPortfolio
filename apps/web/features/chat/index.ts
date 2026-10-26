@@ -1,7 +1,8 @@
-// Public API of the chat feature — the AI chat side panel.
-// Everything else in this feature (chat-view, chat-message-list, use-chat, chatStorage, …)
-// is an implementation detail and must not be imported from outside this folder.
-export { AskAiButton } from "./components/ask-ai-button";
+// Public API of the chat feature — AI chat side panel + inline view.
+export { ChatView } from "./components/chat-view";
+export { ChatSidePanel } from "./components/chat-side-panel";
 export { ChatPanelProvider, useChatPanel } from "./components/chat-panel-provider";
 export { ChatInput } from "./components/chat-input";
 export { SuggestedQuestions } from "./components/suggested-questions";
+export { AskAiButton } from "./components/ask-ai-button";
+export { OpenChatButton } from "./components/open-chat-button";

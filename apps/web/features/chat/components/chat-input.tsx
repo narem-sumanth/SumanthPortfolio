@@ -15,10 +15,11 @@ export interface ChatInputProps {
   disabled?: boolean;
   autoFocus?: boolean;
   placeholder?: string;
+  className?: string;
 }
 
 export const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(function ChatInput(
-  { value, onValueChange, onSend, sources, onToggleSource, disabled, autoFocus, placeholder = "Ask me anything…" },
+  { value, onValueChange, onSend, sources, onToggleSource, disabled, autoFocus, placeholder = "Ask me anything…", className },
   forwardedRef,
 ) {
   const innerRef = React.useRef<HTMLTextAreaElement>(null);
@@ -42,7 +43,8 @@ export const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(f
   return (
     <div
       className={cn(
-        "flex w-full flex-col gap-3 rounded-xl border border-border bg-transparent p-4 shadow-floating transition duration-300 ease-out"
+        "flex w-full flex-col gap-3 rounded-xl border border-border-brutal bg-base p-4 transition duration-300 ease-out",
+        className,
       )}
     >
       <textarea
