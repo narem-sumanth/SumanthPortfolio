@@ -162,7 +162,13 @@ export async function runChatPipeline(request: PipelineRequest, emit: (event: Pi
       documents = [...projectDocs, ...githubDocs];
     } else if (intent === "experience") {
       if (usePortfolio) {
-        const experience = getExperience();
+        const allExperience = getExperience();
+        const queryLower = retrievalQuery.toLowerCase();
+        // Narrow to a specific company when one is named; otherwise show all.
+        const matched = allExperience.filter((exp) =>
+          exp.company.toLowerCase().split(/\s+/).some((word) => word.length > 2 && queryLower.includes(word))
+        );
+        const experience = matched.length > 0 ? matched : allExperience;
         documents = experience.map((exp) => ({
           id: `experience-${exp.id}`,
           sourceKind: "portfolio" as const,

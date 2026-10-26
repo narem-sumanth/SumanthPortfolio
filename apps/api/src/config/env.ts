@@ -17,7 +17,7 @@ const envSchema = z.object({
 
   NVIDIA_API_KEY: z.string().optional(),
   NVIDIA_BASE_URL: z.string().url().default("https://integrate.api.nvidia.com/v1"),
-  NVIDIA_MODEL: z.string().default("nvidia/nemotron-3-super-120b-a12b"),
+  NVIDIA_MODEL: z.string().default("nvidia/nemotron-4-30b-chat"),
 
   GITHUB_TOKEN: z.string().optional(),
   GITHUB_USERNAME: z.string().optional(),
