@@ -30,8 +30,7 @@ export class NvidiaProvider implements LLMProvider {
         messages,
         stream: true,
         temperature: 0.4,
-// Nemotron reasons internally — low max_tokens leaves empty answer (NVIDIA uses 16384).
-        max_tokens: 16384,
+        max_tokens: 4096,
       }),
       signal: AbortSignal.timeout(30_000),
     });
