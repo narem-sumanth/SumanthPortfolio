@@ -17,24 +17,24 @@
   /* --font-display is injected by next/font in apps/web/app/layout.tsx;
      the --font-sans / --radius-* Tailwind theme values live in theme.css */
 
-  /* Sand and moss, one deep accent — no violet, no gradients. */
-  --surface-base: 221 214 198;
-  --surface-elevated: 226 220 206;
-  --surface-raised: 212 204 187;
-  --surface-inset: 200 192 174;
-  --surface-floating: 230 225 212;
-  --surface-overlay: 233 228 216;
+  /* White ground, dark algae-green ink — the same scheme as data-field="white". */
+  --surface-base: 255 255 255;
+  --surface-elevated: 243 245 242;
+  --surface-raised: 232 236 231;
+  --surface-inset: 243 245 242;
+  --surface-floating: 250 251 250;
+  --surface-overlay: 252 252 252;
 
-  --foreground: 42 42 38;
-  --foreground-muted: 89 87 78;
-  --foreground-subtle: 125 122 110;
+  --foreground: 7 18 13;
+  --foreground-muted: 58 72 63;
+  --foreground-subtle: 98 110 101;
 
-  --border: 196 188 170;
-  --border-strong: 170 162 144;
+  --border: 226 230 225;
+  --border-strong: 200 206 199;
 
-  --accent: 79 98 56;
+  --accent: 7 18 13;
   --accent-foreground: 255 255 255;
-  --accent-soft: 214 219 199;
+  --accent-soft: 232 236 231;
 
   --success: 74 128 82;
   --warning: 163 122 53;
@@ -50,33 +50,70 @@
 
 :root[data-theme="dark"],
 :root.dark {
-  /* Warm near-black — the same sand-and-moss system, inverted. No blue or violet cast. */
-  --surface-base: 26 25 22;
-  --surface-elevated: 34 33 29;
-  --surface-raised: 42 40 35;
-  --surface-inset: 19 18 16;
-  --surface-floating: 48 46 40;
-  --surface-overlay: 37 36 31;
+  /* Dark algae-green ground, white ink, white accent. Two colours only: green and white. */
+  --surface-base: 7 18 13;
+  --surface-elevated: 12 26 19;
+  --surface-raised: 19 36 27;
+  --surface-inset: 4 12 8;
+  --surface-floating: 25 44 33;
+  --surface-overlay: 14 29 21;
 
-  --foreground: 225 219 201;
-  --foreground-muted: 173 166 148;
-  --foreground-subtle: 132 126 112;
+  --foreground: 255 255 255;
+  --foreground-muted: 196 208 200;
+  --foreground-subtle: 138 156 145;
 
-  --border: 58 55 48;
-  --border-strong: 82 78 68;
+  --border: 19 36 27;
+  --border-strong: 34 58 44;
 
-  --accent: 140 173 100;
-  --accent-foreground: 20 20 17;
-  --accent-soft: 46 54 35;
+  --accent: 255 255 255;
+  --accent-foreground: 7 18 13;
+  --accent-soft: 26 44 31;
 
   --success: 110 186 120;
   --warning: 214 165 90;
-  --danger: 214 100 90;
+  --danger: 230 110 98;
 
   --shadow-color: 0 0 0;
-  --shadow-button-raw: 0 3px 12px 2px rgb(var(--shadow-color) / 0.32), 0 1px 4px 1px rgb(var(--shadow-color) / 0.2);
-  --shadow-floating-raw: 0 16px 40px rgb(var(--shadow-color) / 0.55), 0 2px 8px rgb(var(--shadow-color) / 0.4);
-  --shadow-overlay-raw: 0 24px 64px rgb(var(--shadow-color) / 0.7);
+  --shadow-button-raw: 0 3px 12px 2px rgb(var(--shadow-color) / 0.5), 0 1px 4px 1px rgb(var(--shadow-color) / 0.35);
+  --shadow-floating-raw: 0 16px 40px rgb(var(--shadow-color) / 0.7), 0 2px 8px rgb(var(--shadow-color) / 0.5);
+  --shadow-overlay-raw: 0 24px 64px rgb(var(--shadow-color) / 0.8);
 
   color-scheme: dark;
+}
+
+/*
+ * Field scopes — a section can flip the whole field colour on purpose by
+ * setting data-field. Every token is redefined, so utilities (bg-base,
+ * text-foreground, bg-accent, ...) keep working unchanged inside it.
+ * Selectors carry :root so they outrank the :root.dark block above.
+ */
+/* Pure white ground — the hybrid counterpart to the dark algae-green default.
+   Sections that set data-field="white" flip every token (bg-base,
+   text-foreground, border, accent, …) so utilities keep working unchanged
+   inside them. The ink is the site's own dark green, not a neutral black, so
+   white sections read as the same palette inverted. Surface steps carry a
+   faint green tint and are deep enough for cards to show against white;
+   subtle text stays above 4.5:1 on white. */
+:root [data-field="white"] {
+  --surface-base: 255 255 255;
+  --surface-elevated: 243 245 242;
+  --surface-raised: 232 236 231;
+  --surface-inset: 243 245 242;
+  --surface-floating: 250 251 250;
+  --surface-overlay: 252 252 252;
+
+  --foreground: 7 18 13;
+  --foreground-muted: 58 72 63;
+  --foreground-subtle: 98 110 101;
+
+  --border: 226 230 225;
+  --border-strong: 200 206 199;
+
+  --accent: 7 18 13;
+  --accent-foreground: 255 255 255;
+  --accent-soft: 232 236 231;
+
+  --danger: 150 40 30;
+
+  color-scheme: light;
 }

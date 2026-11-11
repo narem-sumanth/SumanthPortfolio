@@ -23,7 +23,7 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata(): Promise<Metadata> {
   const profile = await getProfileSafe();
   const name = profile?.name ?? "Sumanth Narem";
-  const tagline = profile?.tagline ?? "Building across full-stack, DevOps, cloud, and AI.";
+  const tagline = profile?.tagline ?? "Writes the code. Runs the cluster.";
 
   return {
     title: { default: `${name} | AI Portfolio`, template: `%s | ${name}` },
@@ -50,7 +50,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={archivo.variable}
+      className={`dark ${archivo.variable}`}
+      style={{ backgroundColor: "rgb(7,18,13)" }}
     >
       <body>
         <ApiProvider baseUrl={process.env.API_URL ?? ""}>

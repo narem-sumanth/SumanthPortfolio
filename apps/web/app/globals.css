@@ -13,6 +13,13 @@
   }
 }
 
+/* Dark background set unconditionally — we only ever render in dark mode.
+   This prevents any flash of the light-theme surface colour before the
+   next-themes `dark` class is applied client-side. */
+html {
+  background-color: rgb(7 18 13);
+}
+
 body {
   background-color: rgb(var(--surface-base));
   color: rgb(var(--foreground));

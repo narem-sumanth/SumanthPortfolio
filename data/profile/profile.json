@@ -1,15 +1,15 @@
 {
   "name": "Sumanth Narem",
-  "role": "Software Engineer",
-  "tagline": "Building across full-stack, DevOps, cloud, and AI.",
-  "bio": "Sumanth Narem is a software engineer who builds end-to-end: from infrastructure and deployment pipelines to full-stack applications and, more recently, agentic AI systems. At Rever, he works across the stack, from Next.js and SEO on the frontend to Django and FastAPI on the backend, with self-hosted deployments on Docker Compose and Kubernetes via Helm, provisioned with AWS CloudFormation. Before that, he shipped MERN and React Native products at Design Blocks, and built React applications at The Entrepreneurship Network. He is currently learning retrieval-augmented generation, infrastructure as code at scale, and applied LLM evaluation. This portfolio itself is proof of the approach: a RAG-backed AI twin, grounded in verified, version-controlled data instead of freeform hallucination.",
+  "role": "Senior Software Developer & Junior DevOps Engineer",
+  "tagline": "Writes the code. Runs the cluster.",
+  "bio": "I'm a senior software developer and junior DevOps engineer: I build the product end to end, then containerise it, provision the cloud under it, and keep it running. At Rever, I work across the stack, from Next.js on the frontend to Django and FastAPI on the backend, then ship it to Kubernetes on AWS. This portfolio is proof of the same approach: an AI twin grounded in real, version-controlled data instead of freeform guesses.",
   "location": "PLACEHOLDER: City, Country",
-  "availability": "Software Engineer, Rever",
+  "availability": "Senior Software Developer & Junior DevOps Engineer, Rever",
   "currentlyLearning": ["Retrieval-augmented generation", "Infrastructure as code at scale", "Applied LLM evaluation"],
   "socials": [
     { "label": "GitHub", "url": "https://github.com/narem-sumanth", "icon": "github" },
     { "label": "LinkedIn", "url": "https://www.linkedin.com/in/PLACEHOLDER", "icon": "linkedin" },
-    { "label": "Email", "url": "mailto:sumanth.narem@rever.ai", "icon": "mail" }
+    { "label": "Email", "url": "mailto:naremsumanth@gmail.com", "icon": "mail" }
   ],
   "resumeUrl": "/resume.pdf"
 }

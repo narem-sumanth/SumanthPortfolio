@@ -37,14 +37,22 @@ export function ChatView({
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
   const isPanel = variant === "panel";
   const panelMaxWidth = expanded ? "max-w-5xl" : "max-w-none";
+  // Tracks which `initialMessage` value this mount has already sent, so the
+  // effect below can run again safely (`sendMessage`'s identity changes once
+  // the reply starts streaming in) without ever sending the same ask twice.
+  const consumedInitialMessage = React.useRef<string | null>(null);
 
-  // Fires the hero's live-control question exactly once, as soon as restored
-  // history has settled — never races the stored-conversation load.
+  // Fires the hero's live-control question exactly once per open, as soon as
+  // restored history has settled — never races the stored-conversation load.
+  // Sends as a new turn even when a conversation already exists: a visitor
+  // asking a second question from the hero expects it answered, not silently
+  // dropped in favour of whatever was already on screen.
   React.useEffect(() => {
-    if (!initialMessage || isRestoring || hasStarted) return;
+    if (!initialMessage || isRestoring || consumedInitialMessage.current === initialMessage) return;
+    consumedInitialMessage.current = initialMessage;
     sendMessage(initialMessage);
     onConsumeInitialMessage?.();
-  }, [initialMessage, isRestoring, hasStarted, sendMessage, onConsumeInitialMessage]);
+  }, [initialMessage, isRestoring, sendMessage, onConsumeInitialMessage]);
 
   function handleClear() {
     if (window.confirm("Clear this conversation? This can't be undone.")) {

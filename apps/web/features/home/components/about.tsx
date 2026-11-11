@@ -1,40 +1,59 @@
-import type { Profile } from "@portfolio/types";
-import { cleanPlaceholder, socialHandle } from "../lib/format";
-import { TEXT_BODY, TEXT_HEADING, TEXT_SMALL } from "../lib/type-scale";
+import type { ExperienceEntry, Profile, Project, Skill } from "@portfolio/types";
+import { splitLeadSentence } from "../lib/format";
+import { CONTAINER, DISPLAY_FACE, SECTION_SPACE, TEXT_BODY, TEXT_HEADING, TEXT_LEAD } from "../lib/type-scale";
+import { AnimatedCounter } from "./animated-counter";
 import { Reveal } from "./reveal";
+import { ScrollWords } from "./scroll-words";
+import { SplitWords } from "./split-words";
 
-export function About({ profile }: { profile: Profile | null }) {
-  const bio = cleanPlaceholder(profile?.bio);
-  const github = profile?.socials.find((s) => s.icon === "github" || /github\.com/.test(s.url));
-  const facts = [
-    profile?.role ? { label: "Role", value: profile.role } : null,
-    profile?.availability ? { label: "Status", value: profile.availability } : null,
-    profile?.currentlyLearning?.[0] ? { label: "Currently learning", value: profile.currentlyLearning[0] } : null,
-    github ? { label: "GitHub", value: socialHandle(github.url) } : null,
-  ].filter((f): f is { label: string; value: string } => f !== null);
+export function About({
+  profile,
+  experience,
+  skills,
+  projects,
+}: {
+  profile: Profile | null;
+  experience: ExperienceEntry[];
+  skills: Skill[];
+  projects: Project[];
+}) {
+  if (!profile) return null;
 
-  if (!bio && facts.length === 0) return null;
+  const { lead, rest } = splitLeadSentence(profile.bio);
+  // The hero already carries the opening sentence; the story continues here.
+  const story = rest || lead;
+
+  // Every figure is counted from the portfolio's own data — nothing typed in by hand.
+  const figures = [
+    { value: experience.length, label: experience.length === 1 ? "team shipped with" : "teams shipped with" },
+    { value: skills.length, label: "technologies in regular use" },
+    { value: projects.length, label: projects.length === 1 ? "project in the open" : "projects in the open" },
+  ].filter((figure) => figure.value > 0);
 
   return (
-    <section id="about" className="w-full bg-elevated pb-14 pt-20 md:pb-16 md:pt-28">
-      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-12 px-6 sm:px-10 md:grid-cols-[220px_1fr] md:gap-16">
-        <Reveal>
-          <h2 className={`${TEXT_HEADING} font-semibold text-foreground`}>About</h2>
-          <dl className="mt-8 flex flex-col gap-5">
-            {facts.map((fact) => (
-              <div key={fact.label} className="flex flex-col gap-1">
-                <dt className={`${TEXT_SMALL} text-foreground-muted`}>{fact.label}</dt>
-                <dd className={`${TEXT_BODY} text-foreground`}>{fact.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </Reveal>
+    <section id="about" data-field="white" className={`w-full bg-base ${SECTION_SPACE}`}>
+      <div className={`${CONTAINER} grid grid-cols-1 gap-x-10 gap-y-12 lg:grid-cols-12`}>
+        <SplitWords
+          lines={["Code first.", "Ops always."]}
+          className={`${DISPLAY_FACE} ${TEXT_HEADING} text-foreground lg:sticky lg:top-28 lg:col-span-5 lg:self-start`}
+        />
 
-        {bio && (
-          <Reveal delay={0.1} className={`max-w-[65ch] ${TEXT_BODY} leading-[1.7] text-foreground`}>
-            <p>{bio}</p>
-          </Reveal>
-        )}
+        <div className="lg:col-span-7">
+          <ScrollWords text={story} className={`${TEXT_LEAD} font-medium leading-[1.35] text-foreground`} />
+
+          {figures.length > 0 && (
+            <dl className="mt-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12">
+              {figures.map((figure, i) => (
+                <Reveal key={figure.label} delay={i * 0.08} className="flex items-start flex-col-reverse gap-3">
+                  <dt className={`${TEXT_BODY} text-foreground-muted`}>{figure.label}</dt>
+                  <dd className={`${DISPLAY_FACE} ${TEXT_HEADING} text-accent`}>
+                    <AnimatedCounter value={figure.value} />
+                  </dd>
+                </Reveal>
+              ))}
+            </dl>
+          )}
+        </div>
       </div>
     </section>
   );

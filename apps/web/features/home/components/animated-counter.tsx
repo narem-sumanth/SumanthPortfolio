@@ -6,7 +6,9 @@ import { useInView, useReducedMotion } from "motion/react";
 /** Counts up to a real value once it scrolls into view — never a canned animation on fake data. */
 export function AnimatedCounter({ value, className }: { value: number; className?: string }) {
   const ref = React.useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  // Vertical margin only: a horizontal inset would leave a narrow number near the
+  // edge of a phone screen permanently "out of view" and stuck at zero.
+  const inView = useInView(ref, { once: true, margin: "-80px 0px" });
   const reduceMotion = useReducedMotion();
   const [display, setDisplay] = React.useState(reduceMotion ? value : 0);
 
