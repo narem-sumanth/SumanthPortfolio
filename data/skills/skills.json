@@ -20,6 +20,6 @@
   { "id": "skill-postgres", "name": "PostgreSQL", "category": "database", "proficiency": "proficient" },
   { "id": "skill-mongodb", "name": "MongoDB", "category": "database", "proficiency": "proficient" },
   { "id": "skill-llm", "name": "LLM Integration", "category": "ai", "relatedTo": ["skill-rag"], "proficiency": "proficient" },
-  { "id": "skill-rag", "name": "RAG Systems & Pipelines", "category": "ai", "relatedTo": ["skill-llm", "skill-mcp"], "proficiency": "proficient" },
+  { "id": "skill-rag", "name": "RAG Pipelines", "category": "ai", "relatedTo": ["skill-llm", "skill-mcp"], "proficiency": "proficient" },
   { "id": "skill-mcp", "name": "MCP Servers", "category": "ai", "relatedTo": ["skill-llm", "skill-rag"], "proficiency": "proficient" }
 ]

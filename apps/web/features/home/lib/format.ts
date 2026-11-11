@@ -20,7 +20,7 @@ function formatMonth(yyyyMm: string): string {
 export function formatDateRange(startDate: string, endDate?: string | null): string {
   const start = formatMonth(startDate);
   const end = endDate ? formatMonth(endDate) : "Present";
-  return `${start} — ${end}`;
+  return `${start} - ${end}`;
 }
 
 /** Pulls the handle out of a social profile URL, e.g. https://github.com/narem-sumanth → narem-sumanth. */
@@ -31,4 +31,19 @@ export function socialHandle(url: string): string {
   } catch {
     return url;
   }
+}
+
+/** Splits a bio into its opening sentence and everything after it. Only a full stop followed by a space ends the sentence, so "Next.js" stays whole. */
+export function splitLeadSentence(text: string): { lead: string; rest: string } {
+  const match = /^.*?[.!?](?=\s)/.exec(text);
+  if (!match) return { lead: text.trim(), rest: "" };
+  return { lead: match[0].trim(), rest: text.slice(match[0].length).trim() };
+}
+
+/** Splits a tagline like "Writes the code. Runs the cluster." into one headline line per sentence. */
+export function sentenceLines(text: string): string[] {
+  return text
+    .split(/(?<=[.!?])\s+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
 }

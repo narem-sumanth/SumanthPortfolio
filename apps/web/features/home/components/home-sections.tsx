@@ -1,10 +1,16 @@
 import type { ExperienceEntry, Profile, Project, Skill } from "@portfolio/types";
 import { About } from "./about";
-import { ContactBand } from "./contact-band";
+import { Contact } from "./contact";
+import { Experience } from "./experience";
+import { Footer } from "./footer";
 import { Hero } from "./hero";
+import { IntroProvider } from "./intro-provider";
+import { Navbar } from "./navbar";
+import { Preloader } from "./preloader";
+import { Projects } from "./projects";
 import { ScrollProgress } from "./scroll-progress";
-import { SkillsList } from "./skills-list";
-import { Work } from "./work";
+import { StackMarquee } from "./stack-marquee";
+import { Tracks } from "./tracks";
 
 export function HomeSections({
   profile,
@@ -17,14 +23,23 @@ export function HomeSections({
   skills: Skill[];
   projects: Project[];
 }) {
+  const name = profile?.name ?? "Sumanth Narem";
+  const role = profile?.role ?? "Senior Software Developer & Junior DevOps Engineer";
+
   return (
-    <>
+    <IntroProvider>
+      <Preloader name={name} role={role} />
       <ScrollProgress />
-      <Hero profile={profile} experience={experience} skills={skills} projects={projects} />
-      <About profile={profile} />
-      <Work experience={experience} projects={projects} />
-      <SkillsList skills={skills} />
-      <ContactBand profile={profile} />
-    </>
+      <Navbar name={name} />
+
+      <Hero profile={profile} />
+      <StackMarquee skills={skills} />
+      <About profile={profile} experience={experience} skills={skills} projects={projects} />
+      <Tracks skills={skills} />
+      <Experience experience={experience} />
+      <Projects projects={projects} />
+      <Contact profile={profile} />
+      <Footer profile={profile} />
+    </IntroProvider>
   );
 }
