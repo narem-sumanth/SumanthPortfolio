@@ -6,6 +6,7 @@ interface NvidiaProviderOptions {
   apiKey: string;
   baseUrl: string;
   model: string;
+  enableThinking: boolean;
 }
 
 /**
@@ -31,6 +32,7 @@ export class NvidiaProvider implements LLMProvider {
         stream: true,
         temperature: 0.4,
         max_tokens: 4096,
+        thinking: this.options.enableThinking,
       }),
       signal: AbortSignal.timeout(30_000),
     });

@@ -11,6 +11,7 @@ function createLlmProvider(): LLMProvider {
       apiKey: env.NVIDIA_API_KEY,
       baseUrl: env.NVIDIA_BASE_URL,
       model: env.NVIDIA_MODEL,
+      enableThinking: env.NVIDIA_ENABLE_THINKING,
     });
     logger.info({ model: env.NVIDIA_MODEL }, "Using NvidiaProvider with MockProvider fallback for chat completions");
     return new FallbackProvider(primary, new MockProvider());
