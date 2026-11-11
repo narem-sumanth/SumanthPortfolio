@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Archivo } from "next/font/google";
 import { TooltipProvider } from "@portfolio/ui";
 import { AppChrome, ThemeProvider, ApiProvider } from "@/features/shell";
+import { getMetadata } from "@/app/metadata";
 import { getProfileSafe } from "@/features/portfolio";
 import "./globals.css";
 
@@ -21,25 +22,7 @@ const archivo = Archivo({
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const profile = await getProfileSafe();
-  const name = profile?.name ?? "Sumanth Narem";
-  const tagline = profile?.tagline ?? "Writes the code. Runs the cluster.";
-
-  return {
-    title: { default: `${name} | AI Portfolio`, template: `%s | ${name}` },
-    description: `Talk to ${name}'s AI twin, grounded in verified experience, skills, and projects. ${tagline}`,
-    openGraph: {
-      title: `${name} | AI Portfolio`,
-      description: tagline,
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${name} | AI Portfolio`,
-      description: tagline,
-    },
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-  };
+  return getMetadata();
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

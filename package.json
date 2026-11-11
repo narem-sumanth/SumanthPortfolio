@@ -15,7 +15,8 @@
     "test": "turbo run test",
     "ingest": "pnpm --filter @portfolio/api ingest",
     "clean": "turbo run clean && rm -rf node_modules",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "og:image": "node scripts/generate-og-image.mjs"
   },
   "devDependencies": {
     "eslint": "^9.18.0",

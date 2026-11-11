@@ -31,7 +31,7 @@ export function Footer({ profile }: { profile: Profile | null }) {
       <motion.p
         aria-hidden="true"
         style={reduceMotion ? undefined : { y }}
-        className={`mt-10 select-none whitespace-nowrap text-center ${DISPLAY_FACE} text-[15.2vw] leading-[0.78] text-foreground`}
+        className={`mt-10 mb-5 select-none whitespace-nowrap text-center ${DISPLAY_FACE} text-[15.2vw] leading-[0.78] text-foreground`}
       >
         {name}
       </motion.p>
